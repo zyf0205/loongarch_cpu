@@ -1,17 +1,26 @@
 Vivado Simulator v2024.1
 Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
 Copyright 2022-2024 Advanced Micro Devices, Inc. All Rights Reserved.
-Running: D:/_Software/Xilinx/Vivado/2024.1/bin/unwrapped/win64.o/xelab.exe --incr --debug typical --relax --mt 2 -L xil_defaultlib -L unisims_ver -L unimacro_ver -L secureip --snapshot tb_regfile_behav xil_defaultlib.tb_regfile xil_defaultlib.glbl -log elaborate.log 
+Running: D:/_Software/Xilinx/Vivado/2024.1/bin/unwrapped/win64.o/xelab.exe --incr --debug typical --relax --mt 2 -L xil_defaultlib -L unisims_ver -L unimacro_ver -L secureip --snapshot tb_mycpu_behav xil_defaultlib.tb_mycpu xil_defaultlib.glbl -log elaborate.log 
 Using 2 slave threads.
 Starting static elaboration
 Pass Through NonSizing Optimizer
 Completed static elaboration
 Starting simulation data flow analysis
+WARNING: [XSIM 43-4099] "D:/_study/projects/vivado_projects/loongarch_cpu/loongarch_cpu.srcs/sources_1/new/mycpu_top.v" Line 9. Module mycpu_top doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "D:/_study/projects/vivado_projects/loongarch_cpu/loongarch_cpu.srcs/sources_1/new/pc_reg.v" Line 1. Module pc_reg doesn't have a timescale but at least one module in design has a timescale.
 WARNING: [XSIM 43-4099] "D:/_study/projects/vivado_projects/loongarch_cpu/loongarch_cpu.srcs/sources_1/new/regfile.v" Line 1. Module regfile doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "D:/_study/projects/vivado_projects/loongarch_cpu/loongarch_cpu.srcs/sources_1/new/alu.v" Line 1. Module alu doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "D:/_study/projects/vivado_projects/loongarch_cpu/loongarch_cpu.srcs/sources_1/new/mycpu_top.v" Line 9. Module mycpu_top doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "D:/_study/projects/vivado_projects/loongarch_cpu/loongarch_cpu.srcs/sources_1/new/pc_reg.v" Line 1. Module pc_reg doesn't have a timescale but at least one module in design has a timescale.
 WARNING: [XSIM 43-4099] "D:/_study/projects/vivado_projects/loongarch_cpu/loongarch_cpu.srcs/sources_1/new/regfile.v" Line 1. Module regfile doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "D:/_study/projects/vivado_projects/loongarch_cpu/loongarch_cpu.srcs/sources_1/new/alu.v" Line 1. Module alu doesn't have a timescale but at least one module in design has a timescale.
 Completed simulation data flow analysis
 Time Resolution for simulation is 1ps
+Compiling module xil_defaultlib.pc_reg
 Compiling module xil_defaultlib.regfile
-Compiling module xil_defaultlib.tb_regfile
+Compiling module xil_defaultlib.alu
+Compiling module xil_defaultlib.mycpu_top
+Compiling module xil_defaultlib.tb_mycpu
 Compiling module xil_defaultlib.glbl
-Built simulation snapshot tb_regfile_behav
+Built simulation snapshot tb_mycpu_behav
