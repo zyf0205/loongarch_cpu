@@ -1,0 +1,96 @@
+Time resolution is 1 ps
+[exec] PC=0x1c000000  r1 <- 0x12345000
+[exec] PC=0x1c000004  r2 <- 0x12345678
+[exec] PC=0x1c000008  r3 <- 0x00000005
+[exec] PC=0x1c00000c  r4 <- 0x00000003
+[exec] PC=0x1c000010  r5 <- 0xfffffff8
+[exec] PC=0x1c000014  r10 <- 0x00000008
+[exec] PC=0x1c000018  r11 <- 0x00000002
+[exec] PC=0x1c00001c  r12 <- 0x00000001
+[exec] PC=0x1c000020  r13 <- 0x00000000
+[exec] PC=0x1c000024  r14 <- 0x12345000
+[exec] PC=0x1c000028  r15 <- 0x12345678
+[exec] PC=0x1c00002c  r16 <- 0x00000678
+[exec] PC=0x1c000030  r17 <- 0xedcba987
+[exec] PC=0x1c000034  r18 <- 0x00000028
+[exec] PC=0x1c000038  r19 <- 0x02468a00
+[exec] PC=0x1c00003c  r20 <- 0xffffffff
+[exec] PC=0x1c000040  r21 <- 0x00000001
+[exec] PC=0x1c000044  r22 <- 0x00000000
+[exec] PC=0x1c000048  r23 <- 0x00000001
+[exec] PC=0x1c00004c  r24 <- 0x00000078
+[exec] PC=0x1c000050  r25 <- 0x000000f5
+[exec] PC=0x1c000054  r26 <- 0x000000fa
+[exec] PC=0x1c000058  r27 <- 0x00000050
+[exec] PC=0x1c00005c  r28 <- 0x00123450
+[exec] PC=0x1c000060  r29 <- 0xffffffff
+[exec] PC=0x1c000064  r0 <- 0x00000000
+[exec] PC=0x1c000068  r0 <- 0x00000000
+[exec] PC=0x1c00006c  r0 <- 0x00000000
+[exec] PC=0x1c000070  r0 <- 0x00000000
+[exec] PC=0x1c000074  r0 <- 0x00000000
+[exec] PC=0x1c000078  r0 <- 0x00000000
+[exec] PC=0x1c00007c  r0 <- 0x00000000
+[exec] PC=0x1c000080  r0 <- 0x00000000
+[exec] PC=0x1c000084  r0 <- 0x00000000
+[exec] PC=0x1c000088  r0 <- 0x00000000
+[exec] PC=0x1c00008c  r0 <- 0x00000000
+[exec] PC=0x1c000090  r0 <- 0x00000000
+[exec] PC=0x1c000094  r0 <- 0x00000000
+[exec] PC=0x1c000098  r0 <- 0x00000000
+[exec] PC=0x1c00009c  r0 <- 0x00000000
+[exec] PC=0x1c0000a0  r0 <- 0x00000000
+[exec] PC=0x1c0000a4  r0 <- 0x00000000
+[exec] PC=0x1c0000a8  r0 <- 0x00000000
+[exec] PC=0x1c0000ac  r0 <- 0x00000000
+[exec] PC=0x1c0000b0  r0 <- 0x00000000
+[exec] PC=0x1c0000b4  r0 <- 0x00000000
+[exec] PC=0x1c0000b8  r0 <- 0x00000000
+[exec] PC=0x1c0000bc  r0 <- 0x00000000
+[exec] PC=0x1c0000c0  r0 <- 0x00000000
+[exec] PC=0x1c0000c4  r0 <- 0x00000000
+[exec] PC=0x1c0000c8  r0 <- 0x00000000
+[exec] PC=0x1c0000cc  r0 <- 0x00000000
+[exec] PC=0x1c0000d0  r0 <- 0x00000000
+[exec] PC=0x1c0000d4  r0 <- 0x00000000
+[exec] PC=0x1c0000d8  r0 <- 0x00000000
+[exec] PC=0x1c0000dc  r0 <- 0x00000000
+[exec] PC=0x1c0000e0  r0 <- 0x00000000
+[exec] PC=0x1c0000e4  r0 <- 0x00000000
+[exec] PC=0x1c0000e8  r0 <- 0x00000000
+[exec] PC=0x1c0000ec  r0 <- 0x00000000
+
+====== Old Instructions ======
+[PASS]                     LU12I.W r1 : r1 = 0x12345000
+[PASS]                      ADDI.W r2 : r2 = 0x12345678
+[PASS]                    ADDI.W r3=5 : r3 = 0x00000005
+[PASS]                    ADDI.W r4=3 : r4 = 0x00000003
+[PASS]                   ADDI.W r5=-8 : r5 = 0xfffffff8
+[PASS]                  ADD.W r10=5+3 : r10 = 0x00000008
+[PASS]                  SUB.W r11=5-3 : r11 = 0x00000002
+[PASS]                    SLT r12=3<5 : r12 = 0x00000001
+[PASS]                  SLTU r13=5<3u : r13 = 0x00000000
+[PASS]                        AND r14 : r14 = 0x12345000
+[PASS]                         OR r15 : r15 = 0x12345678
+[PASS]                        XOR r16 : r16 = 0x00000678
+[PASS]                        NOR r17 : r17 = 0xedcba987
+[PASS]                 SLL.W r18=5<<3 : r18 = 0x00000028
+[PASS]                      SRL.W r19 : r19 = 0x02468a00
+[PASS]                      SRA.W r20 : r20 = 0xffffffff
+
+====== New: Immediate Ops ======
+[PASS]                  SLTI r21=5<10 : r21 = 0x00000001
+[PASS]              SLTI r22=5<-1? no : r22 = 0x00000000
+[PASS]                SLTUI r23=5<10u : r23 = 0x00000001
+[PASS]            ANDI r24=0x678&0xFF : r24 = 0x00000078
+[PASS]                 ORI r25=5|0xF0 : r25 = 0x000000f5
+[PASS]                XORI r26=5^0xFF : r26 = 0x000000fa
+[PASS]                SLLI.W r27=5<<4 : r27 = 0x00000050
+[PASS]                  SRLI.W r28>>8 : r28 = 0x00123450
+[PASS]                 SRAI.W r29>>>4 : r29 = 0xffffffff
+
+============================
+PASS: 25   FAIL: 0
+ALL TESTS PASSED!
+============================
+$finish called at time : 650 ns : File "D:/_study/projects/vivado_projects/loongarch_cpu/loongarch_cpu.srcs/sim_1/new/tb_mycpu.v" 
