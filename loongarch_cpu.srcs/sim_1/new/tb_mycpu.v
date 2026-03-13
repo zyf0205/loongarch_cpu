@@ -60,66 +60,92 @@ module tb_mycpu;
     always #5 clk = ~clk;
 
     // ========== 加载测试程序 ==========
+    // 基地址 0x1C000000，每条指令偏移+4
+    // 用地址标注方便算跳转偏移
     integer i;
     initial begin
         for (i = 0; i < 1024; i = i + 1)
             u_inst_ram.mem[i] = 32'h03400000;
 
-        // ===== 准备数据 =====
-        // 0: LU12I.W r1, 0x12345            → r1 = 0x12345000
-        u_inst_ram.mem[0] = {7'b0001010, 20'h12345, 5'd1};
-        // 1: ADDI.W r2, r1, 0x678           → r2 = 0x12345678
-        u_inst_ram.mem[1] = {10'b0000001010, 12'h678, 5'd1, 5'd2};
-        // 2: ADDI.W r3, r0, 5               → r3 = 5
-        u_inst_ram.mem[2] = {10'b0000001010, 12'd5, 5'd0, 5'd3};
-        // 3: ADDI.W r4, r0, 3               → r4 = 3
-        u_inst_ram.mem[3] = {10'b0000001010, 12'd3, 5'd0, 5'd4};
-        // 4: ADDI.W r5, r0, -8              → r5 = 0xFFFFFFF8
-        u_inst_ram.mem[4] = {10'b0000001010, 12'hFF8, 5'd0, 5'd5};
+        // ===== 测试1：BEQ (相等跳转) =====
+        // 0x00: ADDI.W r1, r0, 5              r1 = 5
+        u_inst_ram.mem[0] = {10'b0000001010, 12'd5, 5'd0, 5'd1};
+        // 0x04: ADDI.W r2, r0, 5              r2 = 5
+        u_inst_ram.mem[1] = {10'b0000001010, 12'd5, 5'd0, 5'd2};
+        // 0x08: BEQ r1, r2, +8  → 跳到 0x10  (offs16 = 8/4 = 2)
+        //       编码: 010110 | offs16(16位) | rj(5位) | rd(5位)
+        //       BEQ比较rj和rd，offs16=2
+        u_inst_ram.mem[2] = {6'b010110, 16'd2, 5'd1, 5'd2};
+        // 0x0C: ADDI.W r10, r0, 99            r10 = 99 (应该被跳过)
+        u_inst_ram.mem[3] = {10'b0000001010, 12'd99, 5'd0, 5'd10};
+        // 0x10: ADDI.W r10, r0, 77            r10 = 77 (跳转目标)
+        u_inst_ram.mem[4] = {10'b0000001010, 12'd77, 5'd0, 5'd10};
 
-        // ===== 三寄存器运算（旧测试）=====
-        // 5: ADD.W r10, r3, r4              → r10 = 8
-        u_inst_ram.mem[5] = {17'b00000000000100000, 5'd4, 5'd3, 5'd10};
-        // 6: SUB.W r11, r3, r4              → r11 = 2
-        u_inst_ram.mem[6] = {17'b00000000000100010, 5'd4, 5'd3, 5'd11};
-        // 7: SLT r12, r4, r3               → r12 = 1 (3<5)
-        u_inst_ram.mem[7] = {17'b00000000000100100, 5'd3, 5'd4, 5'd12};
-        // 8: SLTU r13, r3, r4              → r13 = 0 (5<3u? no)
-        u_inst_ram.mem[8] = {17'b00000000000100101, 5'd4, 5'd3, 5'd13};
-        // 9: AND r14, r1, r2               → r14 = 0x12345000
-        u_inst_ram.mem[9] = {17'b00000000000101001, 5'd2, 5'd1, 5'd14};
-        // 10: OR r15, r1, r2               → r15 = 0x12345678
-        u_inst_ram.mem[10] = {17'b00000000000101010, 5'd2, 5'd1, 5'd15};
-        // 11: XOR r16, r1, r2              → r16 = 0x00000678
-        u_inst_ram.mem[11] = {17'b00000000000101011, 5'd2, 5'd1, 5'd16};
-        // 12: NOR r17, r1, r2              → r17 = 0xEDCBA987
-        u_inst_ram.mem[12] = {17'b00000000000101000, 5'd2, 5'd1, 5'd17};
-        // 13: SLL.W r18, r3, r4            → r18 = 5<<3 = 40 = 0x28
-        u_inst_ram.mem[13] = {17'b00000000000101110, 5'd4, 5'd3, 5'd18};
-        // 14: SRL.W r19, r1, r4            → r19 = 0x02468A00
-        u_inst_ram.mem[14] = {17'b00000000000101111, 5'd4, 5'd1, 5'd19};
-        // 15: SRA.W r20, r5, r4            → r20 = 0xFFFFFFFF
-        u_inst_ram.mem[15] = {17'b00000000000110000, 5'd4, 5'd5, 5'd20};
+        // ===== 测试2：BNE (不等跳转) =====
+        // 0x14: ADDI.W r3, r0, 3              r3 = 3
+        u_inst_ram.mem[5] = {10'b0000001010, 12'd3, 5'd0, 5'd3};
+        // 0x18: BNE r1, r3, +8  → 跳到 0x20  (offs16 = 8/4 = 2)
+        u_inst_ram.mem[6] = {6'b010111, 16'd2, 5'd1, 5'd3};
+        // 0x1C: ADDI.W r11, r0, 99            r11 = 99 (应该被跳过)
+        u_inst_ram.mem[7] = {10'b0000001010, 12'd99, 5'd0, 5'd11};
+        // 0x20: ADDI.W r11, r0, 88            r11 = 88 (跳转目标)
+        u_inst_ram.mem[8] = {10'b0000001010, 12'd88, 5'd0, 5'd11};
 
-        // ===== 新增：立即数运算 =====
-        // 16: SLTI r21, r3, 10             → r21 = 1 (5 < 10 有符号)
-        u_inst_ram.mem[16] = {10'b0000001000, 12'd10, 5'd3, 5'd21};
-        // 17: SLTI r22, r3, -1             → r22 = 0 (5 < -1? 不是)
-        u_inst_ram.mem[17] = {10'b0000001000, 12'hFFF, 5'd3, 5'd22};
-        // 18: SLTUI r23, r3, 10            → r23 = 1 (5 < 10 无符号)
-        u_inst_ram.mem[18] = {10'b0000001001, 12'd10, 5'd3, 5'd23};
-        // 19: ANDI r24, r2, 0xFF           → r24 = 0x78
-        u_inst_ram.mem[19] = {10'b0000001101, 12'hFF, 5'd2, 5'd24};
-        // 20: ORI r25, r3, 0xF0            → r25 = 0xF5
-        u_inst_ram.mem[20] = {10'b0000001110, 12'hF0, 5'd3, 5'd25};
-        // 21: XORI r26, r3, 0xFF           → r26 = 0xFA
-        u_inst_ram.mem[21] = {10'b0000001111, 12'hFF, 5'd3, 5'd26};
-        // 22: SLLI.W r27, r3, 4            → r27 = 5<<4 = 80 = 0x50
-        u_inst_ram.mem[22] = {17'b00000000010000001, 5'd4, 5'd3, 5'd27};
-        // 23: SRLI.W r28, r1, 8            → r28 = 0x00123450
-        u_inst_ram.mem[23] = {17'b00000000010001001, 5'd8, 5'd1, 5'd28};
-        // 24: SRAI.W r29, r5, 4            → r29 = 0xFFFFFFFF
-        u_inst_ram.mem[24] = {17'b00000000010010001, 5'd4, 5'd5, 5'd29};
+        // ===== 测试3：BEQ 不跳（不相等时不跳）=====
+        // 0x24: BEQ r1, r3, +8  → 不跳（r1=5, r3=3 不等）
+        u_inst_ram.mem[9] = {6'b010110, 16'd2, 5'd1, 5'd3};
+        // 0x28: ADDI.W r12, r0, 66            r12 = 66 (不跳转，应该执行)
+        u_inst_ram.mem[10] = {10'b0000001010, 12'd66, 5'd0, 5'd12};
+
+        // ===== 测试4：B 无条件跳转 =====
+        // 0x2C: B +8  → 跳到 0x34  (offs26 = 8/4 = 2)
+        //       编码: 010100 | offs26高16位在inst[25:10] | offs26低10位在inst[9:0]
+        //       offs26 = 2 = 26'b00_0000_0000_0000_0000_0000_0010
+        //       inst[25:10] = offs26[25:10] = 0, inst[9:0] = offs26[9:0] = 2
+        //       但注意拼接：offs26 = {inst[9:0], inst[25:10]}
+        //       所以要反过来：inst[9:0]=offs26高位, inst[25:10]=offs26低位
+        //       offs26 = 2, 高10位=0, 低16位=2
+        //       inst = {6'b010100, 16'd2, 10'd0}
+        u_inst_ram.mem[11] = {6'b010100, 16'd2, 10'd0};
+        // 0x30: ADDI.W r13, r0, 99            r13 = 99 (应该被跳过)
+        u_inst_ram.mem[12] = {10'b0000001010, 12'd99, 5'd0, 5'd13};
+        // 0x34: ADDI.W r13, r0, 55            r13 = 55 (跳转目标)
+        u_inst_ram.mem[13] = {10'b0000001010, 12'd55, 5'd0, 5'd13};
+
+        // ===== 测试5：BL 跳转并链接 =====
+        // 0x38: BL +8  → 跳到 0x40, r1 = 0x3C (PC+4)
+        u_inst_ram.mem[14] = {6'b010101, 16'd2, 10'd0};
+        // 0x3C: ADDI.W r14, r0, 99            (被跳过)
+        u_inst_ram.mem[15] = {10'b0000001010, 12'd99, 5'd0, 5'd14};
+        // 0x40: ADDI.W r14, r0, 44            r14 = 44 (跳转目标)
+        u_inst_ram.mem[16] = {10'b0000001010, 12'd44, 5'd0, 5'd14};
+
+        // ===== 测试6：JIRL 间接跳转 =====
+        // r1现在 = BL存的返回地址 = 0x1C00003C
+        // 0x44: ADDI.W r6, r0, 20             r6 = 20
+        u_inst_ram.mem[17] = {10'b0000001010, 12'd20, 5'd0, 5'd6};
+        // 0x48: LU12I.W r7, 0x1C000           r7 = 0x1C000000
+        u_inst_ram.mem[18] = {7'b0001010, 20'h1C000, 5'd7};
+        // 0x4C: ORI r7, r7, 0x58              r7 = 0x1C000058 (目标地址)
+        u_inst_ram.mem[19] = {10'b0000001110, 12'h058, 5'd7, 5'd7};
+        // 0x50: JIRL r8, r7, 0  → 跳到r7=0x1C000058, r8=PC+4=0x1C000054
+        u_inst_ram.mem[20] = {6'b010011, 16'd0, 5'd7, 5'd8};
+        // 0x54: ADDI.W r15, r0, 99            (被跳过)
+        u_inst_ram.mem[21] = {10'b0000001010, 12'd99, 5'd0, 5'd15};
+        // 0x58: ADDI.W r15, r0, 33            r15 = 33 (JIRL目标)
+        u_inst_ram.mem[22] = {10'b0000001010, 12'd33, 5'd0, 5'd15};
+
+        // ===== 测试7：循环（用BNE实现）=====
+        // r20 = 0, 循环5次 r20 = r20 + 1
+        // 0x5C: ADDI.W r20, r0, 0             r20 = 0 (循环计数器)
+        u_inst_ram.mem[23] = {10'b0000001010, 12'd0, 5'd0, 5'd20};
+        // 0x60: ADDI.W r21, r0, 5             r21 = 5 (循环上限)
+        u_inst_ram.mem[24] = {10'b0000001010, 12'd5, 5'd0, 5'd21};
+        // 0x64: ADDI.W r20, r20, 1            r20 = r20 + 1 (循环体)
+        u_inst_ram.mem[25] = {10'b0000001010, 12'd1, 5'd20, 5'd20};
+        // 0x68: BNE r20, r21, -4  → 如果r20!=r21, 跳回0x64 (offs16 = -4/4 = -1)
+        u_inst_ram.mem[26] = {6'b010111, 16'hFFFF, 5'd20, 5'd21};
+        // 0x6C: 循环结束后到达这里
     end
 
     // ========== 实时打印 ==========
@@ -128,6 +154,9 @@ module tb_mycpu;
             if (debug_wb_rf_we != 4'b0)
                 $display("[exec] PC=0x%08h  r%0d <- 0x%08h",
                          debug_wb_pc, debug_wb_rf_wnum, debug_wb_rf_wdata);
+            else if (u_cpu.br_taken)
+                $display("[jump] PC=0x%08h  → 0x%08h",
+                         debug_wb_pc, u_cpu.br_target);
         end
     end
 
@@ -138,7 +167,7 @@ module tb_mycpu;
     task check_reg;
         input [ 4:0] reg_num;
         input [31:0] expected;
-        input [8*30:1] name;
+        input [8*40:1] name;
         reg   [31:0] actual;
     begin
         actual = u_cpu.u_regfile.rf[reg_num];
@@ -158,38 +187,19 @@ module tb_mycpu;
         resetn = 0;
         #50;
         resetn = 1;
-        #600;
+        #1500;  // 给循环足够时间
 
         $display("");
-        $display("====== Old Instructions ======");
-        check_reg(5'd1,  32'h12345000, "LU12I.W r1");
-        check_reg(5'd2,  32'h12345678, "ADDI.W r2");
-        check_reg(5'd3,  32'h00000005, "ADDI.W r3=5");
-        check_reg(5'd4,  32'h00000003, "ADDI.W r4=3");
-        check_reg(5'd5,  32'hFFFFFFF8, "ADDI.W r5=-8");
-        check_reg(5'd10, 32'h00000008, "ADD.W r10=5+3");
-        check_reg(5'd11, 32'h00000002, "SUB.W r11=5-3");
-        check_reg(5'd12, 32'h00000001, "SLT r12=3<5");
-        check_reg(5'd13, 32'h00000000, "SLTU r13=5<3u");
-        check_reg(5'd14, 32'h12345000, "AND r14");
-        check_reg(5'd15, 32'h12345678, "OR r15");
-        check_reg(5'd16, 32'h00000678, "XOR r16");
-        check_reg(5'd17, 32'hEDCBA987, "NOR r17");
-        check_reg(5'd18, 32'h00000028, "SLL.W r18=5<<3");
-        check_reg(5'd19, 32'h02468A00, "SRL.W r19");
-        check_reg(5'd20, 32'hFFFFFFFF, "SRA.W r20");
-
-        $display("");
-        $display("====== New: Immediate Ops ======");
-        check_reg(5'd21, 32'h00000001, "SLTI r21=5<10");
-        check_reg(5'd22, 32'h00000000, "SLTI r22=5<-1? no");
-        check_reg(5'd23, 32'h00000001, "SLTUI r23=5<10u");
-        check_reg(5'd24, 32'h00000078, "ANDI r24=0x678&0xFF");
-        check_reg(5'd25, 32'h000000F5, "ORI r25=5|0xF0");
-        check_reg(5'd26, 32'h000000FA, "XORI r26=5^0xFF");
-        check_reg(5'd27, 32'h00000050, "SLLI.W r27=5<<4");
-        check_reg(5'd28, 32'h00123450, "SRLI.W r28>>8");
-        check_reg(5'd29, 32'hFFFFFFFF, "SRAI.W r29>>>4");
+        $display("====== Branch Tests ======");
+        check_reg(5'd10, 32'd77,         "BEQ taken: r10=77");
+        check_reg(5'd11, 32'd88,         "BNE taken: r11=88");
+        check_reg(5'd12, 32'd66,         "BEQ not taken: r12=66");
+        check_reg(5'd13, 32'd55,         "B unconditional: r13=55");
+        check_reg(5'd14, 32'd44,         "BL target: r14=44");
+        check_reg(5'd8,  32'h1C000054,   "JIRL link: r8=PC+4");
+        check_reg(5'd15, 32'd33,         "JIRL target: r15=33");
+        check_reg(5'd20, 32'd5,          "Loop 5 times: r20=5");
+        check_reg(5'd21, 32'd5,          "Loop limit: r21=5");
 
         $display("");
         $display("============================");
