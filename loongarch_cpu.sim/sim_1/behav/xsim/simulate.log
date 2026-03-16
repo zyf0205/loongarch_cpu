@@ -1,39 +1,38 @@
 Time resolution is 1 ps
-[exec] PC=0x1c000000  r1 <- 0x00000005
-[exec] PC=0x1c000004  r2 <- 0x00000005
-[jump] PC=0x1c000008  → 0x1c000010
-[exec] PC=0x1c000010  r10 <- 0x0000004d
-[exec] PC=0x1c000014  r3 <- 0x00000003
-[jump] PC=0x1c000018  → 0x1c000020
-[exec] PC=0x1c000020  r11 <- 0x00000058
-[exec] PC=0x1c000028  r12 <- 0x00000042
-[jump] PC=0x1c00002c  → 0x1c000034
-[exec] PC=0x1c000034  r13 <- 0x00000037
-[exec] PC=0x1c000038  r1 <- 0x1c00003c
-[exec] PC=0x1c000040  r14 <- 0x0000002c
-[exec] PC=0x1c000044  r6 <- 0x00000014
-[exec] PC=0x1c000048  r7 <- 0x1c000000
-[exec] PC=0x1c00004c  r7 <- 0x1c000058
-[exec] PC=0x1c000050  r8 <- 0x1c000054
-[exec] PC=0x1c000058  r15 <- 0x00000021
-[exec] PC=0x1c00005c  r20 <- 0x00000000
-[exec] PC=0x1c000060  r21 <- 0x00000005
-[exec] PC=0x1c000064  r20 <- 0x00000001
-[jump] PC=0x1c000068  → 0x1c000064
-[exec] PC=0x1c000064  r20 <- 0x00000002
-[jump] PC=0x1c000068  → 0x1c000064
-[exec] PC=0x1c000064  r20 <- 0x00000003
-[jump] PC=0x1c000068  → 0x1c000064
-[exec] PC=0x1c000064  r20 <- 0x00000004
-[jump] PC=0x1c000068  → 0x1c000064
-[exec] PC=0x1c000064  r20 <- 0x00000005
-[exec] PC=0x1c00006c  r0 <- 0x00000000
-[exec] PC=0x1c000070  r0 <- 0x00000000
-[exec] PC=0x1c000074  r0 <- 0x00000000
-[exec] PC=0x1c000078  r0 <- 0x00000000
-[exec] PC=0x1c00007c  r0 <- 0x00000000
-[exec] PC=0x1c000080  r0 <- 0x00000000
-[exec] PC=0x1c000084  r0 <- 0x00000000
+[exec] PC=0x1c000000  r1 <- 0x00000000
+[exec] PC=0x1c000004  r2 <- 0x44332000
+[exec] PC=0x1c000008  r2 <- 0x44332211
+[store] addr=0x00000000  we=1111  data=0x44332211
+[exec] PC=0x1c000010  r10 <- 0x44332211
+[exec] PC=0x1c000014  r11 <- 0x00000011
+[exec] PC=0x1c000018  r12 <- 0x00000022
+[exec] PC=0x1c00001c  r13 <- 0x00000033
+[exec] PC=0x1c000020  r14 <- 0x00000044
+[exec] PC=0x1c000024  r3 <- 0x80ff8000
+[exec] PC=0x1c000028  r3 <- 0x80ff80fe
+[store] addr=0x00000004  we=1111  data=0x80ff80fe
+[exec] PC=0x1c000030  r15 <- 0xfffffffe
+[exec] PC=0x1c000034  r16 <- 0x000000fe
+[exec] PC=0x1c000038  r17 <- 0xffff80fe
+[exec] PC=0x1c00003c  r18 <- 0x000080fe
+[exec] PC=0x1c000040  r19 <- 0xffff80ff
+[exec] PC=0x1c000044  r20 <- 0x000080ff
+[exec] PC=0x1c000048  r4 <- 0x00000000
+[store] addr=0x00000008  we=1111  data=0x00000000
+[exec] PC=0x1c000050  r5 <- 0x000000ab
+[store] addr=0x00000008  we=0001  data=0xabababab
+[exec] PC=0x1c000058  r6 <- 0x000000cd
+[store] addr=0x00000009  we=0010  data=0xcdcdcdcd
+[exec] PC=0x1c000060  r21 <- 0x0000cdab
+[store] addr=0x0000000c  we=1111  data=0x00000000
+[exec] PC=0x1c000068  r7 <- 0x000000ef
+[exec] PC=0x1c00006c  r8 <- 0x000be000
+[exec] PC=0x1c000070  r7 <- 0x0000b000
+[exec] PC=0x1c000074  r7 <- 0x0000beef
+[store] addr=0x0000000c  we=0011  data=0xbeefbeef
+[exec] PC=0x1c00007c  r22 <- 0x0000beef
+[exec] PC=0x1c000080  r23 <- 0x1c001080
+[exec] PC=0x1c000084  r24 <- 0x1c000084
 [exec] PC=0x1c000088  r0 <- 0x00000000
 [exec] PC=0x1c00008c  r0 <- 0x00000000
 [exec] PC=0x1c000090  r0 <- 0x00000000
@@ -92,41 +91,43 @@ Time resolution is 1 ps
 [exec] PC=0x1c000164  r0 <- 0x00000000
 [exec] PC=0x1c000168  r0 <- 0x00000000
 [exec] PC=0x1c00016c  r0 <- 0x00000000
-[exec] PC=0x1c000000  r1 <- 0x00000005
-[exec] PC=0x1c000004  r2 <- 0x00000005
-[jump] PC=0x1c000008  → 0x1c000010
-[exec] PC=0x1c000010  r10 <- 0x0000004d
-[exec] PC=0x1c000014  r3 <- 0x00000003
-[jump] PC=0x1c000018  → 0x1c000020
-[exec] PC=0x1c000020  r11 <- 0x00000058
-[exec] PC=0x1c000028  r12 <- 0x00000042
-[jump] PC=0x1c00002c  → 0x1c000034
-[exec] PC=0x1c000034  r13 <- 0x00000037
-[exec] PC=0x1c000038  r1 <- 0x1c00003c
-[exec] PC=0x1c000040  r14 <- 0x0000002c
-[exec] PC=0x1c000044  r6 <- 0x00000014
-[exec] PC=0x1c000048  r7 <- 0x1c000000
-[exec] PC=0x1c00004c  r7 <- 0x1c000058
-[exec] PC=0x1c000050  r8 <- 0x1c000054
-[exec] PC=0x1c000058  r15 <- 0x00000021
-[exec] PC=0x1c00005c  r20 <- 0x00000000
-[exec] PC=0x1c000060  r21 <- 0x00000005
-[exec] PC=0x1c000064  r20 <- 0x00000001
-[jump] PC=0x1c000068  → 0x1c000064
-[exec] PC=0x1c000064  r20 <- 0x00000002
-[jump] PC=0x1c000068  → 0x1c000064
-[exec] PC=0x1c000064  r20 <- 0x00000003
-[jump] PC=0x1c000068  → 0x1c000064
-[exec] PC=0x1c000064  r20 <- 0x00000004
-[jump] PC=0x1c000068  → 0x1c000064
-[exec] PC=0x1c000064  r20 <- 0x00000005
-[exec] PC=0x1c00006c  r0 <- 0x00000000
-[exec] PC=0x1c000070  r0 <- 0x00000000
-[exec] PC=0x1c000074  r0 <- 0x00000000
-[exec] PC=0x1c000078  r0 <- 0x00000000
-[exec] PC=0x1c00007c  r0 <- 0x00000000
-[exec] PC=0x1c000080  r0 <- 0x00000000
-[exec] PC=0x1c000084  r0 <- 0x00000000
+[exec] PC=0x1c000170  r0 <- 0x00000000
+[exec] PC=0x1c000174  r0 <- 0x00000000
+[exec] PC=0x1c000178  r0 <- 0x00000000
+[exec] PC=0x1c000000  r1 <- 0x00000000
+[exec] PC=0x1c000004  r2 <- 0x44332000
+[exec] PC=0x1c000008  r2 <- 0x44332211
+[store] addr=0x00000000  we=1111  data=0x44332211
+[exec] PC=0x1c000010  r10 <- 0x44332211
+[exec] PC=0x1c000014  r11 <- 0x00000011
+[exec] PC=0x1c000018  r12 <- 0x00000022
+[exec] PC=0x1c00001c  r13 <- 0x00000033
+[exec] PC=0x1c000020  r14 <- 0x00000044
+[exec] PC=0x1c000024  r3 <- 0x80ff8000
+[exec] PC=0x1c000028  r3 <- 0x80ff80fe
+[store] addr=0x00000004  we=1111  data=0x80ff80fe
+[exec] PC=0x1c000030  r15 <- 0xfffffffe
+[exec] PC=0x1c000034  r16 <- 0x000000fe
+[exec] PC=0x1c000038  r17 <- 0xffff80fe
+[exec] PC=0x1c00003c  r18 <- 0x000080fe
+[exec] PC=0x1c000040  r19 <- 0xffff80ff
+[exec] PC=0x1c000044  r20 <- 0x000080ff
+[exec] PC=0x1c000048  r4 <- 0x00000000
+[store] addr=0x00000008  we=1111  data=0x00000000
+[exec] PC=0x1c000050  r5 <- 0x000000ab
+[store] addr=0x00000008  we=0001  data=0xabababab
+[exec] PC=0x1c000058  r6 <- 0x000000cd
+[store] addr=0x00000009  we=0010  data=0xcdcdcdcd
+[exec] PC=0x1c000060  r21 <- 0x0000cdab
+[store] addr=0x0000000c  we=1111  data=0x00000000
+[exec] PC=0x1c000068  r7 <- 0x000000ef
+[exec] PC=0x1c00006c  r8 <- 0x000be000
+[exec] PC=0x1c000070  r7 <- 0x0000b000
+[exec] PC=0x1c000074  r7 <- 0x0000beef
+[store] addr=0x0000000c  we=0011  data=0xbeefbeef
+[exec] PC=0x1c00007c  r22 <- 0x0000beef
+[exec] PC=0x1c000080  r23 <- 0x1c001080
+[exec] PC=0x1c000084  r24 <- 0x1c000084
 [exec] PC=0x1c000088  r0 <- 0x00000000
 [exec] PC=0x1c00008c  r0 <- 0x00000000
 [exec] PC=0x1c000090  r0 <- 0x00000000
@@ -193,19 +194,12 @@ Time resolution is 1 ps
 [exec] PC=0x1c000184  r0 <- 0x00000000
 [exec] PC=0x1c000188  r0 <- 0x00000000
 [exec] PC=0x1c00018c  r0 <- 0x00000000
-[exec] PC=0x1c000190  r0 <- 0x00000000
-[exec] PC=0x1c000194  r0 <- 0x00000000
-[exec] PC=0x1c000198  r0 <- 0x00000000
-[exec] PC=0x1c00019c  r0 <- 0x00000000
-[exec] PC=0x1c0001a0  r0 <- 0x00000000
-[exec] PC=0x1c0001a4  r0 <- 0x00000000
-[exec] PC=0x1c0001a8  r0 <- 0x00000000
-[exec] PC=0x1c0001ac  r0 <- 0x00000000
-[exec] PC=0x1c0001b0  r0 <- 0x00000000
-[exec] PC=0x1c0001b4  r0 <- 0x00000000
-[exec] PC=0x1c0001b8  r0 <- 0x00000000
-[exec] PC=0x1c0001bc  r0 <- 0x00000000
-[exec] PC=0x1c0001c0  r0 <- 0x00000000
-[exec] PC=0x1c0001c4  r0 <- 0x00000000
-[exec] PC=0x1c0001c8  r0 <- 0x00000000
-[exec] PC=0x1c0001c
+
+====== LD.W/ST.W Regression ======
+[PASS]                                LD.W word : r10 = 0x44332211
+
+====== LD.B Tests ======
+[PASS]                               LD.B byte0 : r11 = 0x00000011
+[PASS]                               LD.B byte1 : r12 = 0x00000022
+[PASS]                               LD.B byte2 : r13 = 0x00000033
+[PASS]                               LD.B byte3 :

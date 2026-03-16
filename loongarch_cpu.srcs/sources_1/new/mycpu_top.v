@@ -82,7 +82,8 @@ module mycpu_top(
     wire inst_xori   = (inst[31:22] == 10'b0000001111);
 
     // --- 20位立即数型 ---
-    wire inst_lu12i_w = (inst[31:25] == 7'b0001010);
+    wire inst_lu12i_w  = (inst[31:25] == 7'b0001010);
+    wire inst_pcaddu12i = (inst[31:25] == 7'b0001110);
 
     // --- 跳转指令 ---
     wire inst_beq  = (inst[31:26] == 6'b010110);
@@ -91,10 +92,23 @@ module mycpu_top(
     wire inst_bl   = (inst[31:26] == 6'b010101);
     wire inst_jirl = (inst[31:26] == 6'b010011);
 
+    // --- 访存指令 ---
+    wire inst_ld_w  = (inst[31:22] == 10'b0010100010);
+    wire inst_st_w  = (inst[31:22] == 10'b0010100110);
+    wire inst_ld_b  = (inst[31:22] == 10'b0010100000);
+    wire inst_ld_bu = (inst[31:22] == 10'b0010101000);
+    wire inst_ld_h  = (inst[31:22] == 10'b0010100001);
+    wire inst_ld_hu = (inst[31:22] == 10'b0010101001);
+    wire inst_st_b  = (inst[31:22] == 10'b0010100100);
+    wire inst_st_h  = (inst[31:22] == 10'b0010100101);
+
     // 分类
     wire type_r3  = inst_add_w | inst_sub_w | inst_slt  | inst_sltu
                   | inst_nor   | inst_and   | inst_or   | inst_xor
                   | inst_sll_w | inst_srl_w | inst_sra_w;
+
+    wire type_load  = inst_ld_w | inst_ld_b | inst_ld_bu | inst_ld_h | inst_ld_hu;
+    wire type_store = inst_st_w | inst_st_b | inst_st_h;
 
     // 立即数扩展
     wire [31:0] imm12_sext  = {{20{imm12[11]}}, imm12};
@@ -106,8 +120,7 @@ module mycpu_top(
 
     // ==================== 3. 寄存器堆 ====================
 
-    // BEQ/BNE需要比较rj和rd，所以读端口2要选rd
-    wire [ 4:0] rf_raddr2 = (inst_beq | inst_bne) ? rd : rk;
+    wire [ 4:0] rf_raddr2 = (inst_beq | inst_bne | type_store) ? rd : rk;
 
     wire        rf_we;
     wire [ 4:0] rf_waddr;
@@ -124,10 +137,12 @@ module mycpu_top(
 
     // ==================== 4. ALU ====================
 
-    wire [31:0] alu_src1 = inst_lu12i_w ? 32'b0 : rf_rdata1;
+    wire [31:0] alu_src1 = (inst_lu12i_w | inst_pcaddu12i) ? 
+                           (inst_pcaddu12i ? pc : 32'b0) : rf_rdata1;
 
     wire src2_is_reg    = type_r3;
-    wire src2_is_simm12 = inst_addi_w | inst_slti | inst_sltui;
+    wire src2_is_simm12 = inst_addi_w | inst_slti | inst_sltui
+                        | type_load | type_store;
     wire src2_is_uimm12 = inst_andi   | inst_ori  | inst_xori;
     wire src2_is_ui5    = inst_slli_w | inst_srli_w | inst_srai_w;
 
@@ -135,11 +150,12 @@ module mycpu_top(
                            src2_is_simm12 ? imm12_sext :
                            src2_is_uimm12 ? imm12_zext :
                            src2_is_ui5    ? ui5_zext   :
-                           inst_lu12i_w   ? imm20_shift :
+                           (inst_lu12i_w | inst_pcaddu12i) ? imm20_shift :
                                             32'b0;
 
     wire [11:0] alu_op;
-    assign alu_op[ 0] = inst_add_w  | inst_addi_w;
+    assign alu_op[ 0] = inst_add_w | inst_addi_w | type_load | type_store
+                       | inst_pcaddu12i;
     assign alu_op[ 1] = inst_sub_w;
     assign alu_op[ 2] = inst_slt    | inst_slti;
     assign alu_op[ 3] = inst_sltu   | inst_sltui;
@@ -174,25 +190,67 @@ module mycpu_top(
     assign br_target = inst_jirl ? (rf_rdata1 + offs16_sext)
                                  : (pc + (inst_b | inst_bl ? offs26_sext : offs16_sext));
 
-    // ==================== 6. 写回 ====================
+    // ==================== 6. 数据存储器 ====================
+
+    wire [1:0] addr_low2 = alu_result[1:0];
+
+    assign data_sram_en = type_load | type_store;
+
+    // 写使能：根据指令类型和地址低2位选择
+    assign data_sram_we = inst_st_w ? 4'b1111 :
+                          inst_st_h ? (addr_low2[1] ? 4'b1100 : 4'b0011) :
+                          inst_st_b ? (addr_low2 == 2'b00 ? 4'b0001 :
+                                       addr_low2 == 2'b01 ? 4'b0010 :
+                                       addr_low2 == 2'b10 ? 4'b0100 :
+                                                            4'b1000) :
+                                      4'b0000;
+
+    assign data_sram_addr = alu_result;
+
+    // 写数据：字节和半字要把数据移到对应的字节位置
+    assign data_sram_wdata = inst_st_w ? rf_rdata2 :
+                             inst_st_h ? {2{rf_rdata2[15:0]}} :
+                             inst_st_b ? {4{rf_rdata2[7:0]}} :
+                                         rf_rdata2;
+
+    // ==================== 7. 读数据处理 ====================
+
+    // 从内存读回的32位字中，根据地址低位和指令类型截取正确的字节/半字
+    wire [7:0] load_byte = addr_low2 == 2'b00 ? data_sram_rdata[ 7: 0] :
+                           addr_low2 == 2'b01 ? data_sram_rdata[15: 8] :
+                           addr_low2 == 2'b10 ? data_sram_rdata[23:16] :
+                                                data_sram_rdata[31:24];
+
+    wire [15:0] load_half = addr_low2[1] ? data_sram_rdata[31:16] :
+                                           data_sram_rdata[15: 0];
+
+    wire [31:0] load_result = inst_ld_w  ? data_sram_rdata :
+                              inst_ld_b  ? {{24{load_byte[7]}}, load_byte} :
+                              inst_ld_bu ? {24'b0, load_byte} :
+                              inst_ld_h  ? {{16{load_half[15]}}, load_half} :
+                              inst_ld_hu ? {16'b0, load_half} :
+                                           32'b0;
+
+    // ==================== 8. 写回 ====================
 
     wire need_link = inst_bl | inst_jirl;
 
-    assign rf_we    = type_r3 | src2_is_simm12 | src2_is_uimm12
-                    | src2_is_ui5 | inst_lu12i_w | need_link;
+    wire rf_we_alu  = type_r3 | inst_addi_w | inst_slti | inst_sltui
+                    | inst_andi | inst_ori | inst_xori
+                    | inst_slli_w | inst_srli_w | inst_srai_w
+                    | inst_lu12i_w | inst_pcaddu12i;
+    wire rf_we_link = need_link;
+    wire rf_we_load = type_load;
+
+    assign rf_we = rf_we_alu | rf_we_link | rf_we_load;
 
     assign rf_waddr = inst_bl ? 5'd1 : rd;
 
-    assign rf_wdata = need_link ? (pc + 32'd4) : alu_result;
+    assign rf_wdata = rf_we_load ? load_result :
+                      rf_we_link ? (pc + 32'd4) :
+                                   alu_result;
 
-    // ==================== 7. 数据存储器（不用）====================
-
-    assign data_sram_en    = 1'b0;
-    assign data_sram_we    = 4'b0;
-    assign data_sram_addr  = 32'b0;
-    assign data_sram_wdata = 32'b0;
-
-    // ==================== 8. Debug ====================
+    // ==================== 9. Debug ====================
 
     assign debug_wb_pc      = pc;
     assign debug_wb_rf_we   = {4{rf_we}};
