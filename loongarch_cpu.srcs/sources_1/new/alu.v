@@ -28,10 +28,10 @@ module alu(
 
     // 有符号比较: 看减法结果的符号位，但要考虑溢出
     wire slt_result = (alu_src1[31] & ~alu_src2[31])                          // 负-正 → 小于（直接置为1）
-                    | (~(alu_src1[31] ^ alu_src2[31]) & adder_result[31]);     // 同号看差的符号，小于置1
+                    | (~(alu_src1[31] ^ alu_src2[31]) & adder_result[31]);     // adder_result[31]=1，则减法为小于
 
     // 无符号比较: 看33位减法是否借位
-    wire sltu_result = ~adder_result[32];//够减会进位（不会借），不够减不会进位（相当于借了）
+    wire sltu_result = ~adder_result[32];//够减有进位，不够减没有进位
 
     // 移位，2^5=32
     wire [31:0] sll_result = alu_src1 << alu_src2[4:0];//逻辑左移

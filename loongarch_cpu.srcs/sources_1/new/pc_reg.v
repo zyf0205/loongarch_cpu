@@ -7,7 +7,7 @@ module pc_reg(
     output wire [31:0] next_pc      // 下一条指令的PC（给指令存储器用）
 );
 
-    // 计算下一个PC
+    // 组合逻辑，阻塞赋值，计算下一个PC
     assign next_pc = br_taken ? br_target : pc + 32'd4; //组合逻辑用阻塞赋值
 
     // PC寄存器：时钟上升沿更新
