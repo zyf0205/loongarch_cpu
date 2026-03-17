@@ -1,19 +1,16 @@
 module mycpu_top(
     input  wire        clk,
     input  wire        resetn,
-
     output wire        inst_sram_en,
     output wire [ 3:0] inst_sram_we,
     output wire [31:0] inst_sram_addr,
     output wire [31:0] inst_sram_wdata,
     input  wire [31:0] inst_sram_rdata,
-
     output wire        data_sram_en,
     output wire [ 3:0] data_sram_we,
     output wire [31:0] data_sram_addr,
     output wire [31:0] data_sram_wdata,
     input  wire [31:0] data_sram_rdata,
-
     output wire [31:0] debug_wb_pc,
     output wire [ 3:0] debug_wb_rf_we,
     output wire [ 4:0] debug_wb_rf_wnum,
@@ -21,21 +18,42 @@ module mycpu_top(
 );
 
     wire reset = ~resetn;
+    wire [31:0] inst = inst_sram_rdata;
 
-    // ==================== 1. PC ====================
+    // ===== 译码器输出 =====
+    wire [ 4:0] rd, rj, rk;
+    wire [11:0] imm12;
+    wire [19:0] imm20;
+    wire [15:0] offs16;
+    wire [25:0] offs26;
+    wire inst_add_w, inst_sub_w, inst_slt, inst_sltu;
+    wire inst_nor, inst_and, inst_or, inst_xor;
+    wire inst_sll_w, inst_srl_w, inst_sra_w;
+    wire inst_slli_w, inst_srli_w, inst_srai_w;
+    wire inst_addi_w, inst_slti, inst_sltui;
+    wire inst_andi, inst_ori, inst_xori;
+    wire inst_lu12i_w, inst_pcaddu12i;
+    wire inst_beq, inst_bne, inst_b, inst_bl, inst_jirl;
+    wire inst_ld_w, inst_ld_b, inst_ld_bu, inst_ld_h, inst_ld_hu;
+    wire inst_st_w, inst_st_b, inst_st_h;
+    wire type_r3, type_load, type_store;
 
-    wire [31:0] pc;
-    wire [31:0] next_pc;
+    // ===== 控制器输出 =====
+    wire [11:0] alu_op;
+    wire src1_is_pc, src1_is_zero;
+    wire src2_is_reg, src2_is_simm12, src2_is_uimm12, src2_is_ui5, src2_is_imm20;
+    wire rf_we, rf_dst_is_r1, rf_src_is_mem, rf_src_is_link;
+    wire mem_en, raddr2_is_rd;
+
+    // ===== 1. PC =====
+    wire [31:0] pc, next_pc;
     wire        br_taken;
     wire [31:0] br_target;
 
     pc_reg u_pc(
-        .clk      (clk),
-        .reset    (reset),
-        .br_taken (br_taken),
-        .br_target(br_target),
-        .pc       (pc),
-        .next_pc  (next_pc)
+        .clk(clk), .reset(reset),
+        .br_taken(br_taken), .br_target(br_target),
+        .pc(pc), .next_pc(next_pc)
     );
 
     assign inst_sram_en    = ~reset;
@@ -43,74 +61,68 @@ module mycpu_top(
     assign inst_sram_addr  = pc;
     assign inst_sram_wdata = 32'b0;
 
-    wire [31:0] inst = inst_sram_rdata;
+    // ===== 2. 译码 =====
+    decoder u_dec(
+        .inst(inst),
+        .rd(rd), .rj(rj), .rk(rk),
+        .imm12(imm12), .imm20(imm20), .offs16(offs16), .offs26(offs26),
+        .inst_add_w(inst_add_w), .inst_sub_w(inst_sub_w),
+        .inst_slt(inst_slt), .inst_sltu(inst_sltu),
+        .inst_nor(inst_nor), .inst_and(inst_and),
+        .inst_or(inst_or), .inst_xor(inst_xor),
+        .inst_sll_w(inst_sll_w), .inst_srl_w(inst_srl_w), .inst_sra_w(inst_sra_w),
+        .inst_slli_w(inst_slli_w), .inst_srli_w(inst_srli_w), .inst_srai_w(inst_srai_w),
+        .inst_addi_w(inst_addi_w), .inst_slti(inst_slti), .inst_sltui(inst_sltui),
+        .inst_andi(inst_andi), .inst_ori(inst_ori), .inst_xori(inst_xori),
+        .inst_lu12i_w(inst_lu12i_w), .inst_pcaddu12i(inst_pcaddu12i),
+        .inst_beq(inst_beq), .inst_bne(inst_bne),
+        .inst_b(inst_b), .inst_bl(inst_bl), .inst_jirl(inst_jirl),
+        .inst_ld_w(inst_ld_w), .inst_ld_b(inst_ld_b), .inst_ld_bu(inst_ld_bu),
+        .inst_ld_h(inst_ld_h), .inst_ld_hu(inst_ld_hu),
+        .inst_st_w(inst_st_w), .inst_st_b(inst_st_b), .inst_st_h(inst_st_h),
+        .type_r3(type_r3), .type_load(type_load), .type_store(type_store)
+    );
 
-    // ==================== 2. 译码 ====================
+    // ===== 3. 控制器 =====
+    controller u_ctrl(
+        .inst_add_w(inst_add_w), .inst_sub_w(inst_sub_w),
+        .inst_slt(inst_slt), .inst_sltu(inst_sltu),
+        .inst_nor(inst_nor), .inst_and(inst_and),
+        .inst_or(inst_or), .inst_xor(inst_xor),
+        .inst_sll_w(inst_sll_w), .inst_srl_w(inst_srl_w), .inst_sra_w(inst_sra_w),
+        .inst_slli_w(inst_slli_w), .inst_srli_w(inst_srli_w), .inst_srai_w(inst_srai_w),
+        .inst_addi_w(inst_addi_w), .inst_slti(inst_slti), .inst_sltui(inst_sltui),
+        .inst_andi(inst_andi), .inst_ori(inst_ori), .inst_xori(inst_xori),
+        .inst_lu12i_w(inst_lu12i_w), .inst_pcaddu12i(inst_pcaddu12i),
+        .inst_beq(inst_beq), .inst_bne(inst_bne),
+        .inst_b(inst_b), .inst_bl(inst_bl), .inst_jirl(inst_jirl),
+        .inst_ld_w(inst_ld_w), .inst_ld_b(inst_ld_b), .inst_ld_bu(inst_ld_bu),
+        .inst_ld_h(inst_ld_h), .inst_ld_hu(inst_ld_hu),
+        .inst_st_w(inst_st_w), .inst_st_b(inst_st_b), .inst_st_h(inst_st_h),
+        .type_r3(type_r3), .type_load(type_load), .type_store(type_store),
+        .alu_op(alu_op),
+        .src1_is_pc(src1_is_pc), .src1_is_zero(src1_is_zero),
+        .src2_is_reg(src2_is_reg), .src2_is_simm12(src2_is_simm12),
+        .src2_is_uimm12(src2_is_uimm12), .src2_is_ui5(src2_is_ui5),
+        .src2_is_imm20(src2_is_imm20),
+        .rf_we(rf_we), .rf_dst_is_r1(rf_dst_is_r1),
+        .rf_src_is_mem(rf_src_is_mem), .rf_src_is_link(rf_src_is_link),
+        .mem_en(mem_en), .raddr2_is_rd(raddr2_is_rd)
+    );
 
-    wire [ 4:0] rd     = inst[ 4: 0];
-    wire [ 4:0] rj     = inst[ 9: 5];
-    wire [ 4:0] rk     = inst[14:10];
-    wire [11:0] imm12  = inst[21:10];
-    wire [19:0] imm20  = inst[24: 5];
-    wire [15:0] offs16 = inst[25:10];
-    wire [25:0] offs26 = {inst[9:0], inst[25:10]};
+    // ===== 4. 寄存器堆 =====
+    wire [31:0] rf_rdata1, rf_rdata2;
+    wire [ 4:0] rf_waddr = rf_dst_is_r1 ? 5'd1 : rd;
+    wire [31:0] rf_wdata;
 
-    // --- 三寄存器型 ---
-    wire inst_add_w  = (inst[31:15] == 17'b00000000000100000);
-    wire inst_sub_w  = (inst[31:15] == 17'b00000000000100010);
-    wire inst_slt    = (inst[31:15] == 17'b00000000000100100);
-    wire inst_sltu   = (inst[31:15] == 17'b00000000000100101);
-    wire inst_nor    = (inst[31:15] == 17'b00000000000101000);
-    wire inst_and    = (inst[31:15] == 17'b00000000000101001);
-    wire inst_or     = (inst[31:15] == 17'b00000000000101010);
-    wire inst_xor    = (inst[31:15] == 17'b00000000000101011);
-    wire inst_sll_w  = (inst[31:15] == 17'b00000000000101110);
-    wire inst_srl_w  = (inst[31:15] == 17'b00000000000101111);
-    wire inst_sra_w  = (inst[31:15] == 17'b00000000000110000);
+    regfile u_regfile(
+        .clk(clk),
+        .raddr1(rj),                                .rdata1(rf_rdata1),
+        .raddr2(raddr2_is_rd ? rd : rk),            .rdata2(rf_rdata2),
+        .we(rf_we), .waddr(rf_waddr), .wdata(rf_wdata)
+    );
 
-    // --- 移位立即数型 ---
-    wire inst_slli_w = (inst[31:15] == 17'b00000000010000001);
-    wire inst_srli_w = (inst[31:15] == 17'b00000000010001001);
-    wire inst_srai_w = (inst[31:15] == 17'b00000000010010001);
-
-    // --- 12位立即数型 ---
-    wire inst_addi_w = (inst[31:22] == 10'b0000001010);
-    wire inst_slti   = (inst[31:22] == 10'b0000001000);
-    wire inst_sltui  = (inst[31:22] == 10'b0000001001);
-    wire inst_andi   = (inst[31:22] == 10'b0000001101);
-    wire inst_ori    = (inst[31:22] == 10'b0000001110);
-    wire inst_xori   = (inst[31:22] == 10'b0000001111);
-
-    // --- 20位立即数型 ---
-    wire inst_lu12i_w  = (inst[31:25] == 7'b0001010);
-    wire inst_pcaddu12i = (inst[31:25] == 7'b0001110);
-
-    // --- 跳转指令 ---
-    wire inst_beq  = (inst[31:26] == 6'b010110);
-    wire inst_bne  = (inst[31:26] == 6'b010111);
-    wire inst_b    = (inst[31:26] == 6'b010100);
-    wire inst_bl   = (inst[31:26] == 6'b010101);
-    wire inst_jirl = (inst[31:26] == 6'b010011);
-
-    // --- 访存指令 ---
-    wire inst_ld_w  = (inst[31:22] == 10'b0010100010);
-    wire inst_st_w  = (inst[31:22] == 10'b0010100110);
-    wire inst_ld_b  = (inst[31:22] == 10'b0010100000);
-    wire inst_ld_bu = (inst[31:22] == 10'b0010101000);
-    wire inst_ld_h  = (inst[31:22] == 10'b0010100001);
-    wire inst_ld_hu = (inst[31:22] == 10'b0010101001);
-    wire inst_st_b  = (inst[31:22] == 10'b0010100100);
-    wire inst_st_h  = (inst[31:22] == 10'b0010100101);
-
-    // 分类
-    wire type_r3  = inst_add_w | inst_sub_w | inst_slt  | inst_sltu
-                  | inst_nor   | inst_and   | inst_or   | inst_xor
-                  | inst_sll_w | inst_srl_w | inst_sra_w;
-
-    wire type_load  = inst_ld_w | inst_ld_b | inst_ld_bu | inst_ld_h | inst_ld_hu;
-    wire type_store = inst_st_w | inst_st_b | inst_st_h;
-
-    // 立即数扩展
+    // ===== 5. 立即数扩展 =====
     wire [31:0] imm12_sext  = {{20{imm12[11]}}, imm12};
     wire [31:0] imm12_zext  = {20'b0, imm12};
     wire [31:0] imm20_shift = {imm20, 12'b0};
@@ -118,111 +130,49 @@ module mycpu_top(
     wire [31:0] offs16_sext = {{14{offs16[15]}}, offs16, 2'b0};
     wire [31:0] offs26_sext = {{ 4{offs26[25]}}, offs26, 2'b0};
 
-    // ==================== 3. 寄存器堆 ====================
-
-    wire [ 4:0] rf_raddr2 = (inst_beq | inst_bne | type_store) ? rd : rk;
-
-    wire        rf_we;
-    wire [ 4:0] rf_waddr;
-    wire [31:0] rf_wdata;
-    wire [31:0] rf_rdata1;
-    wire [31:0] rf_rdata2;
-
-    regfile u_regfile(
-        .clk   (clk),
-        .raddr1(rj),          .rdata1(rf_rdata1),
-        .raddr2(rf_raddr2),   .rdata2(rf_rdata2),
-        .we    (rf_we),       .waddr (rf_waddr),  .wdata(rf_wdata)
-    );
-
-    // ==================== 4. ALU ====================
-
-    wire [31:0] alu_src1 = (inst_lu12i_w | inst_pcaddu12i) ? 
-                           (inst_pcaddu12i ? pc : 32'b0) : rf_rdata1;
-
-    wire src2_is_reg    = type_r3;
-    wire src2_is_simm12 = inst_addi_w | inst_slti | inst_sltui
-                        | type_load | type_store;
-    wire src2_is_uimm12 = inst_andi   | inst_ori  | inst_xori;
-    wire src2_is_ui5    = inst_slli_w | inst_srli_w | inst_srai_w;
+    // ===== 6. ALU =====
+    wire [31:0] alu_src1 = src1_is_pc   ? pc   :
+                           src1_is_zero ? 32'b0 :
+                                          rf_rdata1;
 
     wire [31:0] alu_src2 = src2_is_reg    ? rf_rdata2  :
                            src2_is_simm12 ? imm12_sext :
                            src2_is_uimm12 ? imm12_zext :
                            src2_is_ui5    ? ui5_zext   :
-                           (inst_lu12i_w | inst_pcaddu12i) ? imm20_shift :
+                           src2_is_imm20  ? imm20_shift :
                                             32'b0;
 
-    wire [11:0] alu_op;
-    assign alu_op[ 0] = inst_add_w | inst_addi_w | type_load | type_store
-                       | inst_pcaddu12i;
-    assign alu_op[ 1] = inst_sub_w;
-    assign alu_op[ 2] = inst_slt    | inst_slti;
-    assign alu_op[ 3] = inst_sltu   | inst_sltui;
-    assign alu_op[ 4] = inst_and    | inst_andi;
-    assign alu_op[ 5] = inst_nor;
-    assign alu_op[ 6] = inst_or     | inst_ori;
-    assign alu_op[ 7] = inst_xor    | inst_xori;
-    assign alu_op[ 8] = inst_sll_w  | inst_slli_w;
-    assign alu_op[ 9] = inst_srl_w  | inst_srli_w;
-    assign alu_op[10] = inst_sra_w  | inst_srai_w;
-    assign alu_op[11] = inst_lu12i_w;
-
     wire [31:0] alu_result;
+    alu u_alu(.alu_op(alu_op), .alu_src1(alu_src1), .alu_src2(alu_src2), .alu_result(alu_result));
 
-    alu u_alu(
-        .alu_op    (alu_op),
-        .alu_src1  (alu_src1),
-        .alu_src2  (alu_src2),
-        .alu_result(alu_result)
-    );
-
-    // ==================== 5. 跳转逻辑 ====================
-
+    // ===== 7. 跳转 =====
     wire rj_eq_rd = (rf_rdata1 == rf_rdata2);
 
-    assign br_taken = (inst_beq  &  rj_eq_rd)
-                    | (inst_bne  & ~rj_eq_rd)
-                    | inst_b
-                    | inst_bl
-                    | inst_jirl;
+    assign br_taken = (inst_beq & rj_eq_rd) | (inst_bne & ~rj_eq_rd)
+                    | inst_b | inst_bl | inst_jirl;
 
     assign br_target = inst_jirl ? (rf_rdata1 + offs16_sext)
-                                 : (pc + (inst_b | inst_bl ? offs26_sext : offs16_sext));
+                                 : (pc + (inst_b|inst_bl ? offs26_sext : offs16_sext));
 
-    // ==================== 6. 数据存储器 ====================
-
+    // ===== 8. 数据存储器 =====
     wire [1:0] addr_low2 = alu_result[1:0];
 
-    assign data_sram_en = type_load | type_store;
+    assign data_sram_en = mem_en;
 
-    // 写使能：根据指令类型和地址低2位选择
     assign data_sram_we = inst_st_w ? 4'b1111 :
                           inst_st_h ? (addr_low2[1] ? 4'b1100 : 4'b0011) :
-                          inst_st_b ? (addr_low2 == 2'b00 ? 4'b0001 :
-                                       addr_low2 == 2'b01 ? 4'b0010 :
-                                       addr_low2 == 2'b10 ? 4'b0100 :
-                                                            4'b1000) :
+                          inst_st_b ? (4'b0001 << addr_low2) :
                                       4'b0000;
 
-    assign data_sram_addr = alu_result;
-
-    // 写数据：字节和半字要把数据移到对应的字节位置
+    assign data_sram_addr  = alu_result;
     assign data_sram_wdata = inst_st_w ? rf_rdata2 :
                              inst_st_h ? {2{rf_rdata2[15:0]}} :
                              inst_st_b ? {4{rf_rdata2[7:0]}} :
                                          rf_rdata2;
 
-    // ==================== 7. 读数据处理 ====================
-
-    // 从内存读回的32位字中，根据地址低位和指令类型截取正确的字节/半字
-    wire [7:0] load_byte = addr_low2 == 2'b00 ? data_sram_rdata[ 7: 0] :
-                           addr_low2 == 2'b01 ? data_sram_rdata[15: 8] :
-                           addr_low2 == 2'b10 ? data_sram_rdata[23:16] :
-                                                data_sram_rdata[31:24];
-
-    wire [15:0] load_half = addr_low2[1] ? data_sram_rdata[31:16] :
-                                           data_sram_rdata[15: 0];
+    // ===== 9. 读数据处理 =====
+    wire [7:0]  load_byte = data_sram_rdata[addr_low2*8 +: 8];
+    wire [15:0] load_half = addr_low2[1] ? data_sram_rdata[31:16] : data_sram_rdata[15:0];
 
     wire [31:0] load_result = inst_ld_w  ? data_sram_rdata :
                               inst_ld_b  ? {{24{load_byte[7]}}, load_byte} :
@@ -231,27 +181,12 @@ module mycpu_top(
                               inst_ld_hu ? {16'b0, load_half} :
                                            32'b0;
 
-    // ==================== 8. 写回 ====================
+    // ===== 10. 写回 =====
+    assign rf_wdata = rf_src_is_mem  ? load_result :
+                      rf_src_is_link ? (pc + 32'd4) :
+                                       alu_result;
 
-    wire need_link = inst_bl | inst_jirl;
-
-    wire rf_we_alu  = type_r3 | inst_addi_w | inst_slti | inst_sltui
-                    | inst_andi | inst_ori | inst_xori
-                    | inst_slli_w | inst_srli_w | inst_srai_w
-                    | inst_lu12i_w | inst_pcaddu12i;
-    wire rf_we_link = need_link;
-    wire rf_we_load = type_load;
-
-    assign rf_we = rf_we_alu | rf_we_link | rf_we_load;
-
-    assign rf_waddr = inst_bl ? 5'd1 : rd;
-
-    assign rf_wdata = rf_we_load ? load_result :
-                      rf_we_link ? (pc + 32'd4) :
-                                   alu_result;
-
-    // ==================== 9. Debug ====================
-
+    // ===== 11. Debug =====
     assign debug_wb_pc      = pc;
     assign debug_wb_rf_we   = {4{rf_we}};
     assign debug_wb_rf_wnum = rf_waddr;
