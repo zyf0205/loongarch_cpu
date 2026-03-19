@@ -1,0 +1,1 @@
+--debug "typical" --relax --mt "2" -L "xil_defaultlib" --snapshot "tb_alu_behav_new" "xil_defaultlib.tb_alu" "xil_defaultlib.glbl" -log "tb_alu_elab_new.log" 

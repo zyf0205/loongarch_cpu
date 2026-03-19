@@ -1,0 +1,46 @@
+#-----------------------------------------------------------
+# xsim v2024.1 (64-bit)
+# SW Build 5076996 on Wed May 22 18:37:14 MDT 2024
+# IP Build 5075265 on Wed May 22 21:45:21 MDT 2024
+# SharedData Build 5076995 on Wed May 22 18:29:18 MDT 2024
+# Start of session at: Wed Mar 18 18:36:15 2026
+# Process ID: 21320
+# Current directory: D:/_study/projects/vivado_projects/loongarch_cpu/loongarch_cpu.sim/sim_1/behav/xsim
+# Command line: xsim.exe -log tb_regfile_sim_new.log -mode tcl -source {xsim.dir/tb_regfile_behav_new/xsim_script.tcl}
+# Log file: D:/_study/projects/vivado_projects/loongarch_cpu/loongarch_cpu.sim/sim_1/behav/xsim/tb_regfile_sim_new.log
+# Journal file: D:/_study/projects/vivado_projects/loongarch_cpu/loongarch_cpu.sim/sim_1/behav/xsim\xsim.jou
+# Running On        :DESKTOP-0H8NVPO
+# Platform          :Windows Server 2016 or Windows 10
+# Operating System  :26200
+# Processor Detail  :AMD Ryzen 7 6800H with Radeon Graphics         
+# CPU Frequency     :3194 MHz
+# CPU Physical cores:8
+# CPU Logical cores :16
+# Host memory       :16340 MB
+# Swap memory       :6174 MB
+# Total Virtual     :22514 MB
+# Available Virtual :9246 MB
+#-----------------------------------------------------------
+source xsim.dir/tb_regfile_behav_new/xsim_script.tcl
+# xsim {tb_regfile_behav_new} -autoloadwcfg -runall
+Time resolution is 1 ps
+run -all
+[PASS]                    r0 read = 0 : got=0x00000000
+[PASS]               write r0 ignored : got=0x00000000
+[PASS]             write then read r1 : got=0xaaaa0001
+[PASS]               r1 still correct : got=0xaaaa0001
+[PASS]                     r2 correct : got=0xbbbb0002
+[PASS]                            r10 : got=0x0000000a
+[PASS]                            r20 : got=0x00000014
+[PASS]                            r31 : got=0x0000001f
+[PASS]                 r1 overwritten : got=0x1e111111
+[PASS]           read after writeback : got=0x12345678
+[PASS]                  r0 still zero : got=0x00000000
+[PASS]                   r5 preserved : got=0x12345678
+============================
+PASS: 12   FAIL: 0
+ALL TESTS PASSED!
+============================
+$finish called at time : 176 ns : File "D:/_study/projects/vivado_projects/loongarch_cpu/loongarch_cpu.srcs/sim_1/new/tb_regfile.v" Line 118
+exit
+INFO: [Common 17-206] Exiting xsim at Wed Mar 18 18:36:17 2026...

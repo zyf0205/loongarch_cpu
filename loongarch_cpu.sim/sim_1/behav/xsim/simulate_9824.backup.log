@@ -1,0 +1,182 @@
+#-----------------------------------------------------------
+# xsim v2024.1 (64-bit)
+# SW Build 5076996 on Wed May 22 18:37:14 MDT 2024
+# IP Build 5075265 on Wed May 22 21:45:21 MDT 2024
+# SharedData Build 5076995 on Wed May 22 18:29:18 MDT 2024
+# Start of session at: Wed Mar 18 18:33:51 2026
+# Process ID: 9824
+# Current directory: D:/_study/projects/vivado_projects/loongarch_cpu/loongarch_cpu.sim/sim_1/behav/xsim
+# Command line: xsim.exe -log simulate.log -mode tcl -source {xsim.dir/tb_mycpu_behav/xsim_script.tcl}
+# Log file: D:/_study/projects/vivado_projects/loongarch_cpu/loongarch_cpu.sim/sim_1/behav/xsim/simulate.log
+# Journal file: D:/_study/projects/vivado_projects/loongarch_cpu/loongarch_cpu.sim/sim_1/behav/xsim\xsim.jou
+# Running On        :DESKTOP-0H8NVPO
+# Platform          :Windows Server 2016 or Windows 10
+# Operating System  :26200
+# Processor Detail  :AMD Ryzen 7 6800H with Radeon Graphics         
+# CPU Frequency     :3194 MHz
+# CPU Physical cores:8
+# CPU Logical cores :16
+# Host memory       :16340 MB
+# Swap memory       :6174 MB
+# Total Virtual     :22514 MB
+# Available Virtual :9151 MB
+#-----------------------------------------------------------
+source xsim.dir/tb_mycpu_behav/xsim_script.tcl
+# xsim {tb_mycpu_behav} -autoloadwcfg -tclbatch {tb_mycpu.tcl} -key {Behavioral:sim_1:Functional:tb_mycpu}
+Time resolution is 1 ps
+source tb_mycpu.tcl
+## set curr_wave [current_wave_config]
+## if { [string length $curr_wave] == 0 } {
+##   if { [llength [get_objects]] > 0} {
+##     add_wave /
+##     set_property needs_save false [current_wave_config]
+##   } else {
+##      send_msg_id Add_Wave-1 WARNING "No top level signals found. Simulator will start without a wave window. If you want to open a wave window go to 'File->New Waveform Configuration' or type 'create_wave_config' in the TCL console."
+##   }
+## }
+## run 1000ns
+[exec] PC=0x1c000000  r1 <- 0x00000007
+[exec] PC=0x1c000004  r2 <- 0x00000003
+[exec] PC=0x1c000008  r3 <- 0xfffffffb
+[exec] PC=0x1c00000c  r4 <- 0x12345000
+[exec] PC=0x1c000010  r4 <- 0x12345678
+[exec] PC=0x1c000014  r5 <- 0x00000000
+[exec] PC=0x1c000018  r6 <- 0xffffffff
+
+========== STAGE: SETUP ==========
+[PASS]                                 setup r1 : r1 = 0x00000007
+[PASS]                                 setup r2 : r2 = 0x00000003
+[PASS]                                 setup r3 : r3 = 0xfffffffb
+[PASS]                                 setup r4 : r4 = 0x12345678
+[PASS]                                 setup r5 : r5 = 0x00000000
+[PASS]                                 setup r6 : r6 = 0xffffffff
+[exec] PC=0x1c00001c  r10 <- 0x0000000a
+[exec] PC=0x1c000020  r11 <- 0x00000004
+[exec] PC=0x1c000024  r12 <- 0x00000001
+[exec] PC=0x1c000028  r13 <- 0x00000000
+[exec] PC=0x1c00002c  r14 <- 0x00000001
+[exec] PC=0x1c000030  r15 <- 0x12345678
+[exec] PC=0x1c000034  r16 <- 0x00000007
+[exec] PC=0x1c000038  r17 <- 0x00000004
+[exec] PC=0x1c00003c  r18 <- 0xfffffff8
+[exec] PC=0x1c000040  r19 <- 0x00000038
+[exec] PC=0x1c000044  r20 <- 0x01ffffff
+[exec] PC=0x1c000048  r21 <- 0xffffffff
+
+======= STAGE: R-TYPE OPS =======
+[PASS]                                    ADD.W : r10 = 0x0000000a
+[PASS]                                    SUB.W : r11 = 0x00000004
+[PASS]                                      SLT : r12 = 0x00000001
+[PASS]                                SLT false : r13 = 0x00000000
+[PASS]                                     SLTU : r14 = 0x00000001
+[PASS]                                      AND : r15 = 0x12345678
+[PASS]                                       OR : r16 = 0x00000007
+[PASS]                                      XOR : r17 = 0x00000004
+[PASS]                                      NOR : r18 = 0xfffffff8
+[PASS]                                    SLL.W : r19 = 0x00000038
+[PASS]                                    SRL.W : r20 = 0x01ffffff
+[PASS]                                    SRA.W : r21 = 0xffffffff
+[exec] PC=0x1c00004c  r22 <- 0x00000001
+[exec] PC=0x1c000050  r23 <- 0x00000000
+[exec] PC=0x1c000054  r24 <- 0x00000078
+[exec] PC=0x1c000058  r25 <- 0x000000f7
+[exec] PC=0x1c00005c  r26 <- 0x000000f8
+[exec] PC=0x1c000060  r27 <- 0x00000070
+[exec] PC=0x1c000064  r28 <- 0x000000ff
+[exec] PC=0x1c000068  r29 <- 0xfffffffe
+
+===== STAGE: IMMEDIATE OPS =====
+[PASS]                                     SLTI : r22 = 0x00000001
+[PASS]                                    SLTUI : r23 = 0x00000000
+[PASS]                                     ANDI : r24 = 0x00000078
+[PASS]                                      ORI : r25 = 0x000000f7
+[PASS]                                     XORI : r26 = 0x000000f8
+[PASS]                                   SLLI.W : r27 = 0x00000070
+[PASS]                                   SRLI.W : r28 = 0x000000ff
+[PASS]                                   SRAI.W : r29 = 0xfffffffe
+[exec] PC=0x1c00006c  r30 <- 0x1c00106c
+
+======= STAGE: PC RELATIVE =======
+[PASS]                                PCADDU12I : r30 = 0x1c00106c
+[store] addr=0x00000000 we=1111 data=0x12345678
+[exec] PC=0x1c000074  r10 <- 0x12345678
+[exec] PC=0x1c000078  r7 <- 0x80ff8000
+[exec] PC=0x1c00007c  r7 <- 0x80ff80fe
+[store] addr=0x00000004 we=1111 data=0x80ff80fe
+[exec] PC=0x1c000084  r11 <- 0xfffffffe
+[exec] PC=0x1c000088  r12 <- 0x000000fe
+[exec] PC=0x1c00008c  r13 <- 0xffff80fe
+[exec] PC=0x1c000090  r14 <- 0x000080fe
+[exec] PC=0x1c000094  r15 <- 0xffff80ff
+[exec] PC=0x1c000098  r16 <- 0x000080ff
+[store] addr=0x00000008 we=1111 data=0x00000000
+[exec] PC=0x1c0000a0  r8 <- 0x000000ab
+[store] addr=0x00000008 we=0001 data=0xabababab
+[exec] PC=0x1c0000a8  r9 <- 0x000000cd
+[store] addr=0x00000009 we=0010 data=0xcdcdcdcd
+[exec] PC=0x1c0000b0  r17 <- 0x0000cdab
+[store] addr=0x0000000c we=1111 data=0x00000000
+[exec] PC=0x1c0000b8  r8 <- 0x0000b000
+[exec] PC=0x1c0000bc  r8 <- 0x0000beef
+[store] addr=0x0000000c we=0011 data=0xbeefbeef
+[exec] PC=0x1c0000c4  r18 <- 0x0000beef
+
+========== STAGE: MEMORY ==========
+[PASS]                              mem[0] ST.W : mem[0] = 0x12345678
+[PASS]                         mem[4] sign data : mem[4] = 0x80ff80fe
+[PASS]                              mem[8] ST.B : mem[8] = 0x0000cdab
+[PASS]                             mem[12] ST.H : mem[12] = 0x0000beef
+[PASS]                                     LD.W : r10 = 0x12345678
+[PASS]                                     LD.B : r11 = 0xfffffffe
+[PASS]                                    LD.BU : r12 = 0x000000fe
+[PASS]                                     LD.H : r13 = 0xffff80fe
+[PASS]                                    LD.HU : r14 = 0x000080fe
+[PASS]                               LD.H upper : r15 = 0xffff80ff
+[PASS]                              LD.HU upper : r16 = 0x000080ff
+[PASS]                            LD.W byte mix : r17 = 0x0000cdab
+[PASS]                            LD.W half mix : r18 = 0x0000beef
+[exec] PC=0x1c0000c8  r1 <- 0x00000005
+[exec] PC=0x1c0000cc  r2 <- 0x00000005
+[exec] PC=0x1c0000d8  r19 <- 0x0000000b
+[exec] PC=0x1c0000dc  r3 <- 0x00000003
+[exec] PC=0x1c0000e8  r20 <- 0x00000016
+[exec] PC=0x1c0000f0  r21 <- 0x00000021
+[exec] PC=0x1c0000fc  r22 <- 0x0000002c
+[exec] PC=0x1c000100  r1 <- 0x1c000104
+[exec] PC=0x1c000108  r23 <- 0x00000037
+[exec] PC=0x1c00010c  r8 <- 0x1c000000
+[exec] PC=0x1c000110  r8 <- 0x1c00011c
+[exec] PC=0x1c000114  r24 <- 0x1c000118
+[exec] PC=0x1c00011c  r25 <- 0x00000042
+
+========= STAGE: BRANCH =========
+[PASS]                                BEQ taken : r19 = 0x0000000b
+[PASS]                                BNE taken : r20 = 0x00000016
+[PASS]                            BEQ not taken : r21 = 0x00000021
+[PASS]                                        B : r22 = 0x0000002c
+[PASS]                                BL target : r23 = 0x00000037
+[PASS]                                JIRL link : r24 = 0x1c000118
+[PASS]                              JIRL target : r25 = 0x00000042
+[exec] PC=0x1c000120  r26 <- 0x00000000
+[exec] PC=0x1c000124  r27 <- 0x00000000
+[exec] PC=0x1c000128  r28 <- 0x00000005
+[exec] PC=0x1c00012c  r27 <- 0x00000001
+[exec] PC=0x1c000130  r26 <- 0x00000001
+[exec] PC=0x1c00012c  r27 <- 0x00000002
+[exec] PC=0x1c000130  r26 <- 0x00000003
+[exec] PC=0x1c00012c  r27 <- 0x00000003
+[exec] PC=0x1c000130  r26 <- 0x00000006
+[exec] PC=0x1c00012c  r27 <- 0x00000004
+[exec] PC=0x1c000130  r26 <- 0x0000000a
+[exec] PC=0x1c00012c  r27 <- 0x00000005
+[exec] PC=0x1c000130  r26 <- 0x0000000f
+[store] addr=0x00000010 we=1111 data=0x0000000f
+[exec] PC=0x1c00013c  r29 <- 0x0000000f
+
+========== STAGE: LOOP ==========
+[PASS]                             mem[16] loop : mem[16] = 0x0000000f
+[PASS]                                 loop sum : r26 = 0x0000000f
+[PASS]                               loop count : r27 = 0x00000005
+[PASS]                            loop loadback : r29 = 0x0000000f
+[FAIL]                             r0 preserved : r0 got=0xxxxxxxxx exp=0x00000000
+INFO: [Common 17-206] Exiting xsim at Wed Mar 18 18:33:56 2026...

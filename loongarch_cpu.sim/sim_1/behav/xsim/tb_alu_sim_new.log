@@ -1,0 +1,57 @@
+#-----------------------------------------------------------
+# xsim v2024.1 (64-bit)
+# SW Build 5076996 on Wed May 22 18:37:14 MDT 2024
+# IP Build 5075265 on Wed May 22 21:45:21 MDT 2024
+# SharedData Build 5076995 on Wed May 22 18:29:18 MDT 2024
+# Start of session at: Wed Mar 18 18:36:07 2026
+# Process ID: 20304
+# Current directory: D:/_study/projects/vivado_projects/loongarch_cpu/loongarch_cpu.sim/sim_1/behav/xsim
+# Command line: xsim.exe -log tb_alu_sim_new.log -mode tcl -source {xsim.dir/tb_alu_behav_new/xsim_script.tcl}
+# Log file: D:/_study/projects/vivado_projects/loongarch_cpu/loongarch_cpu.sim/sim_1/behav/xsim/tb_alu_sim_new.log
+# Journal file: D:/_study/projects/vivado_projects/loongarch_cpu/loongarch_cpu.sim/sim_1/behav/xsim\xsim.jou
+# Running On        :DESKTOP-0H8NVPO
+# Platform          :Windows Server 2016 or Windows 10
+# Operating System  :26200
+# Processor Detail  :AMD Ryzen 7 6800H with Radeon Graphics         
+# CPU Frequency     :3194 MHz
+# CPU Physical cores:8
+# CPU Logical cores :16
+# Host memory       :16340 MB
+# Swap memory       :6174 MB
+# Total Virtual     :22514 MB
+# Available Virtual :9130 MB
+#-----------------------------------------------------------
+source xsim.dir/tb_alu_behav_new/xsim_script.tcl
+# xsim {tb_alu_behav_new} -autoloadwcfg -runall
+Time resolution is 1 ps
+run -all
+[PASS]              ADD 100+200 : result=0x0000012c
+[PASS]                 ADD wrap : result=0x00000000
+[PASS]                ADD max+1 : result=0x80000000
+[PASS]              SUB 200-100 : result=0x00000064
+[PASS]                  SUB 0-1 : result=0xffffffff
+[PASS]                SUB min-1 : result=0x7fffffff
+[PASS]                 SLT -5<3 : result=0x00000001
+[PASS]                 SLT 10>3 : result=0x00000000
+[PASS]              SLT min<max : result=0x00000001
+[PASS]                 SLTU 1<2 : result=0x00000001
+[PASS]               SLTU big>1 : result=0x00000000
+[PASS]            SLTU low<high : result=0x00000001
+[PASS]                      AND : result=0x0f000f00
+[PASS]                       OR : result=0xff0fff0f
+[PASS]                      XOR : result=0xf00ff00f
+[PASS]                      NOR : result=0x00f000f0
+[PASS]                 SLL 1<<4 : result=0x00000010
+[PASS]                SLL 1<<31 : result=0x80000000
+[PASS]                SRL logic : result=0x08000000
+[PASS]                   SRL 31 : result=0x00000001
+[PASS]                SRA arith : result=0xf8000000
+[PASS]                   SRA 31 : result=0xffffffff
+[PASS]             LUI passthru : result=0x12345000
+============================
+PASS: 23   FAIL: 0
+ALL TESTS PASSED!
+============================
+$finish called at time : 240 ns : File "D:/_study/projects/vivado_projects/loongarch_cpu/loongarch_cpu.srcs/sim_1/new/tb_alu.v" Line 75
+exit
+INFO: [Common 17-206] Exiting xsim at Wed Mar 18 18:36:09 2026...

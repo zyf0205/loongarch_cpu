@@ -6,6 +6,14 @@ Time resolution is 1 ps
 [exec] PC=0x1c000010  r4 <- 0x12345678
 [exec] PC=0x1c000014  r5 <- 0x00000000
 [exec] PC=0x1c000018  r6 <- 0xffffffff
+
+========== STAGE: SETUP ==========
+[PASS]                                 setup r1 : r1 = 0x00000007
+[PASS]                                 setup r2 : r2 = 0x00000003
+[PASS]                                 setup r3 : r3 = 0xfffffffb
+[PASS]                                 setup r4 : r4 = 0x12345678
+[PASS]                                 setup r5 : r5 = 0x00000000
+[PASS]                                 setup r6 : r6 = 0xffffffff
 [exec] PC=0x1c00001c  r10 <- 0x0000000a
 [exec] PC=0x1c000020  r11 <- 0x00000004
 [exec] PC=0x1c000024  r12 <- 0x00000001
@@ -18,6 +26,20 @@ Time resolution is 1 ps
 [exec] PC=0x1c000040  r19 <- 0x00000038
 [exec] PC=0x1c000044  r20 <- 0x01ffffff
 [exec] PC=0x1c000048  r21 <- 0xffffffff
+
+======= STAGE: R-TYPE OPS =======
+[PASS]                                    ADD.W : r10 = 0x0000000a
+[PASS]                                    SUB.W : r11 = 0x00000004
+[PASS]                                      SLT : r12 = 0x00000001
+[PASS]                                SLT false : r13 = 0x00000000
+[PASS]                                     SLTU : r14 = 0x00000001
+[PASS]                                      AND : r15 = 0x12345678
+[PASS]                                       OR : r16 = 0x00000007
+[PASS]                                      XOR : r17 = 0x00000004
+[PASS]                                      NOR : r18 = 0xfffffff8
+[PASS]                                    SLL.W : r19 = 0x00000038
+[PASS]                                    SRL.W : r20 = 0x01ffffff
+[PASS]                                    SRA.W : r21 = 0xffffffff
 [exec] PC=0x1c00004c  r22 <- 0x00000001
 [exec] PC=0x1c000050  r23 <- 0x00000000
 [exec] PC=0x1c000054  r24 <- 0x00000078
@@ -26,7 +48,20 @@ Time resolution is 1 ps
 [exec] PC=0x1c000060  r27 <- 0x00000070
 [exec] PC=0x1c000064  r28 <- 0x000000ff
 [exec] PC=0x1c000068  r29 <- 0xfffffffe
+
+===== STAGE: IMMEDIATE OPS =====
+[PASS]                                     SLTI : r22 = 0x00000001
+[PASS]                                    SLTUI : r23 = 0x00000000
+[PASS]                                     ANDI : r24 = 0x00000078
+[PASS]                                      ORI : r25 = 0x000000f7
+[PASS]                                     XORI : r26 = 0x000000f8
+[PASS]                                   SLLI.W : r27 = 0x00000070
+[PASS]                                   SRLI.W : r28 = 0x000000ff
+[PASS]                                   SRAI.W : r29 = 0xfffffffe
 [exec] PC=0x1c00006c  r30 <- 0x1c00106c
+
+======= STAGE: PC RELATIVE =======
+[PASS]                                PCADDU12I : r30 = 0x1c00106c
 [store] addr=0x00000000 we=1111 data=0x12345678
 [exec] PC=0x1c000074  r10 <- 0x12345678
 [exec] PC=0x1c000078  r7 <- 0x80ff8000
@@ -49,6 +84,21 @@ Time resolution is 1 ps
 [exec] PC=0x1c0000bc  r8 <- 0x0000beef
 [store] addr=0x0000000c we=0011 data=0xbeefbeef
 [exec] PC=0x1c0000c4  r18 <- 0x0000beef
+
+========== STAGE: MEMORY ==========
+[PASS]                              mem[0] ST.W : mem[0] = 0x12345678
+[PASS]                         mem[4] sign data : mem[4] = 0x80ff80fe
+[PASS]                              mem[8] ST.B : mem[8] = 0x0000cdab
+[PASS]                             mem[12] ST.H : mem[12] = 0x0000beef
+[PASS]                                     LD.W : r10 = 0x12345678
+[PASS]                                     LD.B : r11 = 0xfffffffe
+[PASS]                                    LD.BU : r12 = 0x000000fe
+[PASS]                                     LD.H : r13 = 0xffff80fe
+[PASS]                                    LD.HU : r14 = 0x000080fe
+[PASS]                               LD.H upper : r15 = 0xffff80ff
+[PASS]                              LD.HU upper : r16 = 0x000080ff
+[PASS]                            LD.W byte mix : r17 = 0x0000cdab
+[PASS]                            LD.W half mix : r18 = 0x0000beef
 [exec] PC=0x1c0000c8  r1 <- 0x00000005
 [exec] PC=0x1c0000cc  r2 <- 0x00000005
 [exec] PC=0x1c0000d8  r19 <- 0x0000000b
@@ -62,6 +112,15 @@ Time resolution is 1 ps
 [exec] PC=0x1c000110  r8 <- 0x1c00011c
 [exec] PC=0x1c000114  r24 <- 0x1c000118
 [exec] PC=0x1c00011c  r25 <- 0x00000042
+
+========= STAGE: BRANCH =========
+[PASS]                                BEQ taken : r19 = 0x0000000b
+[PASS]                                BNE taken : r20 = 0x00000016
+[PASS]                            BEQ not taken : r21 = 0x00000021
+[PASS]                                        B : r22 = 0x0000002c
+[PASS]                                BL target : r23 = 0x00000037
+[PASS]                                JIRL link : r24 = 0x1c000118
+[PASS]                              JIRL target : r25 = 0x00000042
 [exec] PC=0x1c000120  r26 <- 0x00000000
 [exec] PC=0x1c000124  r27 <- 0x00000000
 [exec] PC=0x1c000128  r28 <- 0x00000005
@@ -77,230 +136,198 @@ Time resolution is 1 ps
 [exec] PC=0x1c000130  r26 <- 0x0000000f
 [store] addr=0x00000010 we=1111 data=0x0000000f
 [exec] PC=0x1c00013c  r29 <- 0x0000000f
-[exec] PC=0x1c000140  r0 <- 0x00000000
-[exec] PC=0x1c000144  r0 <- 0x00000000
-[exec] PC=0x1c000148  r0 <- 0x00000000
-[exec] PC=0x1c00014c  r0 <- 0x00000000
-[exec] PC=0x1c000150  r0 <- 0x00000000
-[exec] PC=0x1c000154  r0 <- 0x00000000
-[exec] PC=0x1c000158  r0 <- 0x00000000
-[exec] PC=0x1c00015c  r0 <- 0x00000000
-[exec] PC=0x1c000160  r0 <- 0x00000000
-[exec] PC=0x1c000164  r0 <- 0x00000000
-[exec] PC=0x1c000168  r0 <- 0x00000000
-[exec] PC=0x1c00016c  r0 <- 0x00000000
-[exec] PC=0x1c000170  r0 <- 0x00000000
-[exec] PC=0x1c000174  r0 <- 0x00000000
-[exec] PC=0x1c000178  r0 <- 0x00000000
-[exec] PC=0x1c00017c  r0 <- 0x00000000
-[exec] PC=0x1c000180  r0 <- 0x00000000
-[exec] PC=0x1c000184  r0 <- 0x00000000
-[exec] PC=0x1c000188  r0 <- 0x00000000
-[exec] PC=0x1c00018c  r0 <- 0x00000000
-[exec] PC=0x1c000190  r0 <- 0x00000000
-[exec] PC=0x1c000194  r0 <- 0x00000000
-[exec] PC=0x1c000198  r0 <- 0x00000000
-[exec] PC=0x1c00019c  r0 <- 0x00000000
-[exec] PC=0x1c0001a0  r0 <- 0x00000000
-[exec] PC=0x1c0001a4  r0 <- 0x00000000
-[exec] PC=0x1c0001a8  r0 <- 0x00000000
-[exec] PC=0x1c0001ac  r0 <- 0x00000000
-[exec] PC=0x1c0001b0  r0 <- 0x00000000
-[exec] PC=0x1c0001b4  r0 <- 0x00000000
-[exec] PC=0x1c0001b8  r0 <- 0x00000000
-[exec] PC=0x1c0001bc  r0 <- 0x00000000
-[exec] PC=0x1c0001c0  r0 <- 0x00000000
-[exec] PC=0x1c0001c4  r0 <- 0x00000000
-[exec] PC=0x1c0001c8  r0 <- 0x00000000
-[exec] PC=0x1c0001cc  r0 <- 0x00000000
-[exec] PC=0x1c0001d0  r0 <- 0x00000000
-[exec] PC=0x1c0001d4  r0 <- 0x00000000
-[exec] PC=0x1c0001d8  r0 <- 0x00000000
-[exec] PC=0x1c0001dc  r0 <- 0x00000000
-[exec] PC=0x1c0001e0  r0 <- 0x00000000
-[exec] PC=0x1c0001e4  r0 <- 0x00000000
-[exec] PC=0x1c0001e8  r0 <- 0x00000000
-[exec] PC=0x1c0001ec  r0 <- 0x00000000
-[exec] PC=0x1c0001f0  r0 <- 0x00000000
-[exec] PC=0x1c0001f4  r0 <- 0x00000000
-[exec] PC=0x1c0001f8  r0 <- 0x00000000
-[exec] PC=0x1c0001fc  r0 <- 0x00000000
-[exec] PC=0x1c000200  r0 <- 0x00000000
-[exec] PC=0x1c000204  r0 <- 0x00000000
-[exec] PC=0x1c000208  r0 <- 0x00000000
-[exec] PC=0x1c00020c  r0 <- 0x00000000
-[exec] PC=0x1c000210  r0 <- 0x00000000
-[exec] PC=0x1c000214  r0 <- 0x00000000
-[exec] PC=0x1c000218  r0 <- 0x00000000
-[exec] PC=0x1c00021c  r0 <- 0x00000000
-[exec] PC=0x1c000220  r0 <- 0x00000000
-[exec] PC=0x1c000224  r0 <- 0x00000000
-[exec] PC=0x1c000228  r0 <- 0x00000000
-[exec] PC=0x1c00022c  r0 <- 0x00000000
-[exec] PC=0x1c000230  r0 <- 0x00000000
-[exec] PC=0x1c000234  r0 <- 0x00000000
-[exec] PC=0x1c000238  r0 <- 0x00000000
-[exec] PC=0x1c00023c  r0 <- 0x00000000
-[exec] PC=0x1c000240  r0 <- 0x00000000
-[exec] PC=0x1c000244  r0 <- 0x00000000
-[exec] PC=0x1c000248  r0 <- 0x00000000
-[exec] PC=0x1c00024c  r0 <- 0x00000000
-[exec] PC=0x1c000250  r0 <- 0x00000000
-[exec] PC=0x1c000254  r0 <- 0x00000000
-[exec] PC=0x1c000258  r0 <- 0x00000000
-[exec] PC=0x1c00025c  r0 <- 0x00000000
-[exec] PC=0x1c000260  r0 <- 0x00000000
-[exec] PC=0x1c000264  r0 <- 0x00000000
-[exec] PC=0x1c000268  r0 <- 0x00000000
-[exec] PC=0x1c00026c  r0 <- 0x00000000
-[exec] PC=0x1c000270  r0 <- 0x00000000
-[exec] PC=0x1c000274  r0 <- 0x00000000
-[exec] PC=0x1c000278  r0 <- 0x00000000
-[exec] PC=0x1c00027c  r0 <- 0x00000000
-[exec] PC=0x1c000280  r0 <- 0x00000000
-[exec] PC=0x1c000284  r0 <- 0x00000000
-[exec] PC=0x1c000288  r0 <- 0x00000000
-[exec] PC=0x1c00028c  r0 <- 0x00000000
-[exec] PC=0x1c000290  r0 <- 0x00000000
-[exec] PC=0x1c000294  r0 <- 0x00000000
-[exec] PC=0x1c000298  r0 <- 0x00000000
-[exec] PC=0x1c00029c  r0 <- 0x00000000
-[exec] PC=0x1c0002a0  r0 <- 0x00000000
-[exec] PC=0x1c0002a4  r0 <- 0x00000000
-[exec] PC=0x1c0002a8  r0 <- 0x00000000
-[exec] PC=0x1c0002ac  r0 <- 0x00000000
-[exec] PC=0x1c0002b0  r0 <- 0x00000000
-[exec] PC=0x1c0002b4  r0 <- 0x00000000
-[exec] PC=0x1c0002b8  r0 <- 0x00000000
-[exec] PC=0x1c0002bc  r0 <- 0x00000000
-[exec] PC=0x1c0002c0  r0 <- 0x00000000
-[exec] PC=0x1c0002c4  r0 <- 0x00000000
-[exec] PC=0x1c0002c8  r0 <- 0x00000000
-[exec] PC=0x1c0002cc  r0 <- 0x00000000
-[exec] PC=0x1c0002d0  r0 <- 0x00000000
-[exec] PC=0x1c0002d4  r0 <- 0x00000000
-[exec] PC=0x1c0002d8  r0 <- 0x00000000
-[exec] PC=0x1c0002dc  r0 <- 0x00000000
-[exec] PC=0x1c0002e0  r0 <- 0x00000000
-[exec] PC=0x1c0002e4  r0 <- 0x00000000
-[exec] PC=0x1c0002e8  r0 <- 0x00000000
-[exec] PC=0x1c0002ec  r0 <- 0x00000000
-[exec] PC=0x1c0002f0  r0 <- 0x00000000
-[exec] PC=0x1c0002f4  r0 <- 0x00000000
-[exec] PC=0x1c0002f8  r0 <- 0x00000000
-[exec] PC=0x1c0002fc  r0 <- 0x00000000
-[exec] PC=0x1c000300  r0 <- 0x00000000
-[exec] PC=0x1c000304  r0 <- 0x00000000
-[exec] PC=0x1c000308  r0 <- 0x00000000
-[exec] PC=0x1c00030c  r0 <- 0x00000000
-[exec] PC=0x1c000310  r0 <- 0x00000000
-[exec] PC=0x1c000314  r0 <- 0x00000000
-[exec] PC=0x1c000318  r0 <- 0x00000000
-[exec] PC=0x1c00031c  r0 <- 0x00000000
-[exec] PC=0x1c000320  r0 <- 0x00000000
-[exec] PC=0x1c000324  r0 <- 0x00000000
-[exec] PC=0x1c000328  r0 <- 0x00000000
-[exec] PC=0x1c00032c  r0 <- 0x00000000
-[exec] PC=0x1c000330  r0 <- 0x00000000
-[exec] PC=0x1c000334  r0 <- 0x00000000
-[exec] PC=0x1c000338  r0 <- 0x00000000
-[exec] PC=0x1c00033c  r0 <- 0x00000000
-[exec] PC=0x1c000340  r0 <- 0x00000000
-[exec] PC=0x1c000344  r0 <- 0x00000000
-[exec] PC=0x1c000348  r0 <- 0x00000000
-[exec] PC=0x1c00034c  r0 <- 0x00000000
-[exec] PC=0x1c000350  r0 <- 0x00000000
-[exec] PC=0x1c000354  r0 <- 0x00000000
-[exec] PC=0x1c000358  r0 <- 0x00000000
-[exec] PC=0x1c00035c  r0 <- 0x00000000
-[exec] PC=0x1c000360  r0 <- 0x00000000
-[exec] PC=0x1c000364  r0 <- 0x00000000
-[exec] PC=0x1c000368  r0 <- 0x00000000
-[exec] PC=0x1c00036c  r0 <- 0x00000000
-[exec] PC=0x1c000370  r0 <- 0x00000000
-[exec] PC=0x1c000374  r0 <- 0x00000000
-[exec] PC=0x1c000378  r0 <- 0x00000000
-[exec] PC=0x1c00037c  r0 <- 0x00000000
-[exec] PC=0x1c000380  r0 <- 0x00000000
-[exec] PC=0x1c000384  r0 <- 0x00000000
-[exec] PC=0x1c000388  r0 <- 0x00000000
-[exec] PC=0x1c00038c  r0 <- 0x00000000
-[exec] PC=0x1c000390  r0 <- 0x00000000
-[exec] PC=0x1c000394  r0 <- 0x00000000
-[exec] PC=0x1c000398  r0 <- 0x00000000
-[exec] PC=0x1c00039c  r0 <- 0x00000000
-[exec] PC=0x1c0003a0  r0 <- 0x00000000
-[exec] PC=0x1c0003a4  r0 <- 0x00000000
-[exec] PC=0x1c0003a8  r0 <- 0x00000000
-[exec] PC=0x1c0003ac  r0 <- 0x00000000
-[exec] PC=0x1c0003b0  r0 <- 0x00000000
-[exec] PC=0x1c0003b4  r0 <- 0x00000000
-[exec] PC=0x1c0003b8  r0 <- 0x00000000
-[exec] PC=0x1c0003bc  r0 <- 0x00000000
-[exec] PC=0x1c0003c0  r0 <- 0x00000000
-[exec] PC=0x1c0003c4  r0 <- 0x00000000
-[exec] PC=0x1c0003c8  r0 <- 0x00000000
-[exec] PC=0x1c0003cc  r0 <- 0x00000000
-[exec] PC=0x1c0003d0  r0 <- 0x00000000
-[exec] PC=0x1c0003d4  r0 <- 0x00000000
-[exec] PC=0x1c0003d8  r0 <- 0x00000000
-[exec] PC=0x1c0003dc  r0 <- 0x00000000
-[exec] PC=0x1c0003e0  r0 <- 0x00000000
-[exec] PC=0x1c0003e4  r0 <- 0x00000000
-[exec] PC=0x1c0003e8  r0 <- 0x00000000
-[exec] PC=0x1c0003ec  r0 <- 0x00000000
-[exec] PC=0x1c0003f0  r0 <- 0x00000000
-[exec] PC=0x1c0003f4  r0 <- 0x00000000
-[exec] PC=0x1c0003f8  r0 <- 0x00000000
-[exec] PC=0x1c0003fc  r0 <- 0x00000000
-[exec] PC=0x1c000400  r0 <- 0x00000000
-[exec] PC=0x1c000404  r0 <- 0x00000000
-[exec] PC=0x1c000408  r0 <- 0x00000000
-[exec] PC=0x1c00040c  r0 <- 0x00000000
-[exec] PC=0x1c000410  r0 <- 0x00000000
-[exec] PC=0x1c000414  r0 <- 0x00000000
-[exec] PC=0x1c000418  r0 <- 0x00000000
-[exec] PC=0x1c00041c  r0 <- 0x00000000
-[exec] PC=0x1c000420  r0 <- 0x00000000
-[exec] PC=0x1c000424  r0 <- 0x00000000
-[exec] PC=0x1c000428  r0 <- 0x00000000
-[exec] PC=0x1c00042c  r0 <- 0x00000000
-[exec] PC=0x1c000430  r0 <- 0x00000000
-[exec] PC=0x1c000434  r0 <- 0x00000000
-[exec] PC=0x1c000438  r0 <- 0x00000000
-[exec] PC=0x1c00043c  r0 <- 0x00000000
-[exec] PC=0x1c000440  r0 <- 0x00000000
-[exec] PC=0x1c000444  r0 <- 0x00000000
-[exec] PC=0x1c000448  r0 <- 0x00000000
-[exec] PC=0x1c00044c  r0 <- 0x00000000
-[exec] PC=0x1c000450  r0 <- 0x00000000
-[exec] PC=0x1c000454  r0 <- 0x00000000
-[exec] PC=0x1c000458  r0 <- 0x00000000
-[exec] PC=0x1c00045c  r0 <- 0x00000000
-[exec] PC=0x1c000460  r0 <- 0x00000000
-[exec] PC=0x1c000464  r0 <- 0x00000000
-[exec] PC=0x1c000468  r0 <- 0x00000000
-[exec] PC=0x1c00046c  r0 <- 0x00000000
-[exec] PC=0x1c000470  r0 <- 0x00000000
-[exec] PC=0x1c000474  r0 <- 0x00000000
-[exec] PC=0x1c000478  r0 <- 0x00000000
-[exec] PC=0x1c00047c  r0 <- 0x00000000
-[exec] PC=0x1c000480  r0 <- 0x00000000
-[exec] PC=0x1c000484  r0 <- 0x00000000
-[exec] PC=0x1c000488  r0 <- 0x00000000
-[exec] PC=0x1c00048c  r0 <- 0x00000000
-[exec] PC=0x1c000490  r0 <- 0x00000000
 
-========== FINAL CHECK ==========
+========== STAGE: LOOP ==========
+[PASS]                             mem[16] loop : mem[16] = 0x0000000f
+[PASS]                                 loop sum : r26 = 0x0000000f
+[PASS]                               loop count : r27 = 0x00000005
+[PASS]                            loop loadback : r29 = 0x0000000f
+[PASS]                             r0 preserved : r0 = 0x00000000
+[exec] PC=0x1c000000  r1 <- 0x00000007
+[exec] PC=0x1c000004  r2 <- 0x00000003
+[exec] PC=0x1c000008  r3 <- 0xfffffffb
+[exec] PC=0x1c00000c  r4 <- 0x12345000
+[exec] PC=0x1c000010  r4 <- 0x12345678
+[exec] PC=0x1c000014  r5 <- 0x00000000
+[exec] PC=0x1c000018  r6 <- 0xffffffff
+
+========== STAGE: SETUP ==========
+[PASS]                                 setup r1 : r1 = 0x00000007
+[PASS]                                 setup r2 : r2 = 0x00000003
+[PASS]                                 setup r3 : r3 = 0xfffffffb
+[PASS]                                 setup r4 : r4 = 0x12345678
+[PASS]                                 setup r5 : r5 = 0x00000000
+[PASS]                                 setup r6 : r6 = 0xffffffff
+[exec] PC=0x1c00001c  r10 <- 0x0000000a
+[exec] PC=0x1c000020  r11 <- 0x00000004
+[exec] PC=0x1c000024  r12 <- 0x00000001
+[exec] PC=0x1c000028  r13 <- 0x00000000
+[exec] PC=0x1c00002c  r14 <- 0x00000001
+[exec] PC=0x1c000030  r15 <- 0x12345678
+[exec] PC=0x1c000034  r16 <- 0x00000007
+[exec] PC=0x1c000038  r17 <- 0x00000004
+[exec] PC=0x1c00003c  r18 <- 0xfffffff8
+[exec] PC=0x1c000040  r19 <- 0x00000038
+[exec] PC=0x1c000044  r20 <- 0x01ffffff
+[exec] PC=0x1c000048  r21 <- 0xffffffff
+
+======= STAGE: R-TYPE OPS =======
+[PASS]                                    ADD.W : r10 = 0x0000000a
+[PASS]                                    SUB.W : r11 = 0x00000004
+[PASS]                                      SLT : r12 = 0x00000001
+[PASS]                                SLT false : r13 = 0x00000000
+[PASS]                                     SLTU : r14 = 0x00000001
+[PASS]                                      AND : r15 = 0x12345678
+[PASS]                                       OR : r16 = 0x00000007
+[PASS]                                      XOR : r17 = 0x00000004
+[PASS]                                      NOR : r18 = 0xfffffff8
+[PASS]                                    SLL.W : r19 = 0x00000038
+[PASS]                                    SRL.W : r20 = 0x01ffffff
+[PASS]                                    SRA.W : r21 = 0xffffffff
+[exec] PC=0x1c00004c  r22 <- 0x00000001
+[exec] PC=0x1c000050  r23 <- 0x00000000
+[exec] PC=0x1c000054  r24 <- 0x00000078
+[exec] PC=0x1c000058  r25 <- 0x000000f7
+[exec] PC=0x1c00005c  r26 <- 0x000000f8
+[exec] PC=0x1c000060  r27 <- 0x00000070
+[exec] PC=0x1c000064  r28 <- 0x000000ff
+[exec] PC=0x1c000068  r29 <- 0xfffffffe
+
+===== STAGE: IMMEDIATE OPS =====
+[PASS]                                     SLTI : r22 = 0x00000001
+[PASS]                                    SLTUI : r23 = 0x00000000
+[PASS]                                     ANDI : r24 = 0x00000078
+[PASS]                                      ORI : r25 = 0x000000f7
+[PASS]                                     XORI : r26 = 0x000000f8
+[PASS]                                   SLLI.W : r27 = 0x00000070
+[PASS]                                   SRLI.W : r28 = 0x000000ff
+[PASS]                                   SRAI.W : r29 = 0xfffffffe
+[exec] PC=0x1c00006c  r30 <- 0x1c00106c
+
+======= STAGE: PC RELATIVE =======
+[PASS]                                PCADDU12I : r30 = 0x1c00106c
+[store] addr=0x00000000 we=1111 data=0x12345678
+[exec] PC=0x1c000074  r10 <- 0x12345678
+[exec] PC=0x1c000078  r7 <- 0x80ff8000
+[exec] PC=0x1c00007c  r7 <- 0x80ff80fe
+[store] addr=0x00000004 we=1111 data=0x80ff80fe
+[exec] PC=0x1c000084  r11 <- 0xfffffffe
+[exec] PC=0x1c000088  r12 <- 0x000000fe
+[exec] PC=0x1c00008c  r13 <- 0xffff80fe
+[exec] PC=0x1c000090  r14 <- 0x000080fe
+[exec] PC=0x1c000094  r15 <- 0xffff80ff
+[exec] PC=0x1c000098  r16 <- 0x000080ff
+[store] addr=0x00000008 we=1111 data=0x00000000
+[exec] PC=0x1c0000a0  r8 <- 0x000000ab
+[store] addr=0x00000008 we=0001 data=0xabababab
+[exec] PC=0x1c0000a8  r9 <- 0x000000cd
+[store] addr=0x00000009 we=0010 data=0xcdcdcdcd
+[exec] PC=0x1c0000b0  r17 <- 0x0000cdab
+[store] addr=0x0000000c we=1111 data=0x00000000
+[exec] PC=0x1c0000b8  r8 <- 0x0000b000
+[exec] PC=0x1c0000bc  r8 <- 0x0000beef
+[store] addr=0x0000000c we=0011 data=0xbeefbeef
+[exec] PC=0x1c0000c4  r18 <- 0x0000beef
+
+========== STAGE: MEMORY ==========
 [PASS]                              mem[0] ST.W : mem[0] = 0x12345678
 [PASS]                         mem[4] sign data : mem[4] = 0x80ff80fe
 [PASS]                              mem[8] ST.B : mem[8] = 0x0000cdab
 [PASS]                             mem[12] ST.H : mem[12] = 0x0000beef
-[PASS]                      mem[16] loop result : mem[16] = 0x0000000f
-[PASS]                         BEQ taken result : r19 = 0x0000000b
-[PASS]                         BNE taken result : r20 = 0x00000016
-[PASS]                     BEQ not taken result : r21 = 0x00000021
-[PASS]                                 B result : r22 = 0x0000002c
-[PASS]                         BL target result : r23 = 0x00000037
-[PASS]                       JIRL target result : r25 = 0x00000042
-[PA
+[PASS]                                     LD.W : r10 = 0x12345678
+[PASS]                                     LD.B : r11 = 0xfffffffe
+[PASS]                                    LD.BU : r12 = 0x000000fe
+[PASS]                                     LD.H : r13 = 0xffff80fe
+[PASS]                                    LD.HU : r14 = 0x000080fe
+[PASS]                               LD.H upper : r15 = 0xffff80ff
+[PASS]                              LD.HU upper : r16 = 0x000080ff
+[PASS]                            LD.W byte mix : r17 = 0x0000cdab
+[PASS]                            LD.W half mix : r18 = 0x0000beef
+[exec] PC=0x1c0000c8  r1 <- 0x00000005
+[exec] PC=0x1c0000cc  r2 <- 0x00000005
+[exec] PC=0x1c0000d8  r19 <- 0x0000000b
+[exec] PC=0x1c0000dc  r3 <- 0x00000003
+[exec] PC=0x1c0000e8  r20 <- 0x00000016
+[exec] PC=0x1c0000f0  r21 <- 0x00000021
+[exec] PC=0x1c0000fc  r22 <- 0x0000002c
+[exec] PC=0x1c000100  r1 <- 0x1c000104
+[exec] PC=0x1c000108  r23 <- 0x00000037
+[exec] PC=0x1c00010c  r8 <- 0x1c000000
+[exec] PC=0x1c000110  r8 <- 0x1c00011c
+[exec] PC=0x1c000114  r24 <- 0x1c000118
+[exec] PC=0x1c00011c  r25 <- 0x00000042
+
+========= STAGE: BRANCH =========
+[PASS]                                BEQ taken : r19 = 0x0000000b
+[PASS]                                BNE taken : r20 = 0x00000016
+[PASS]                            BEQ not taken : r21 = 0x00000021
+[PASS]                                        B : r22 = 0x0000002c
+[PASS]                                BL target : r23 = 0x00000037
+[PASS]                                JIRL link : r24 = 0x1c000118
+[PASS]                              JIRL target : r25 = 0x00000042
+[exec] PC=0x1c000120  r26 <- 0x00000000
+[exec] PC=0x1c000124  r27 <- 0x00000000
+[exec] PC=0x1c000128  r28 <- 0x00000005
+[exec] PC=0x1c00012c  r27 <- 0x00000001
+[exec] PC=0x1c000130  r26 <- 0x00000001
+[exec] PC=0x1c00012c  r27 <- 0x00000002
+[exec] PC=0x1c000130  r26 <- 0x00000003
+[exec] PC=0x1c00012c  r27 <- 0x00000003
+[exec] PC=0x1c000130  r26 <- 0x00000006
+[exec] PC=0x1c00012c  r27 <- 0x00000004
+[exec] PC=0x1c000130  r26 <- 0x0000000a
+[exec] PC=0x1c00012c  r27 <- 0x00000005
+[exec] PC=0x1c000130  r26 <- 0x0000000f
+[store] addr=0x00000010 we=1111 data=0x0000000f
+[exec] PC=0x1c00013c  r29 <- 0x0000000f
+
+========== STAGE: LOOP ==========
+[PASS]                             mem[16] loop : mem[16] = 0x0000000f
+[PASS]                                 loop sum : r26 = 0x0000000f
+[PASS]                               loop count : r27 = 0x00000005
+[PASS]                            loop loadback : r29 = 0x0000000f
+[PASS]                             r0 preserved : r0 = 0x00000000
+
+======= COVERAGE SUMMARY =======
+[PASS] coverage                    ADD.W : hits=6
+[PASS] coverage                    SUB.W : hits=1
+[PASS] coverage                      SLT : hits=2
+[PASS] coverage                     SLTU : hits=1
+[PASS] coverage                      NOR : hits=1
+[PASS] coverage                      AND : hits=1
+[PASS] coverage                       OR : hits=1
+[PASS] coverage                      XOR : hits=1
+[PASS] coverage                    SLL.W : hits=1
+[PASS] coverage                    SRL.W : hits=1
+[PASS] coverage                    SRA.W : hits=1
+[PASS] coverage                   SLLI.W : hits=1
+[PASS] coverage                   SRLI.W : hits=1
+[PASS] coverage                   SRAI.W : hits=1
+[PASS] coverage                   ADDI.W : hits=22
+[PASS] coverage                     SLTI : hits=1
+[PASS] coverage                    SLTUI : hits=1
+[PASS] coverage                     ANDI : hits=1
+[PASS] coverage                      ORI : hits=7
+[PASS] coverage                     XORI : hits=1
+[PASS] coverage                  LU12I.W : hits=4
+[PASS] coverage                PCADDU12I : hits=1
+[PASS] coverage                      BEQ : hits=2
+[PASS] coverage                      BNE : hits=6
+[PASS] coverage                        B : hits=1
+[PASS] coverage                       BL : hits=1
+[PASS] coverage                     JIRL : hits=1
+[PASS] coverage                     LD.W : hits=4
+[PASS] coverage                     LD.B : hits=1
+[PASS] coverage                    LD.BU : hits=1
+[PASS] coverage                     LD.H : hits=2
+[PASS] coverage                    LD.HU : hits=2
+[PASS] coverage                     ST.W : hits=5
+[PASS] coverage                     ST.B : hits=2
+[PASS] coverage                     ST.H : hits=1
+[PASS] no fake r0 debug writes
+[PASS] NOP stream observed : hits=20
+=================================
+PASS: 89   FAIL: 0
+ALL PASSED!
+=================================
+$finish called at time : 1116 ns : File "D:/_study/projects/vivado_projects/loongarch_cpu/loongarch_cpu.srcs/sim_1/new/tb_mycpu.v" Line 382

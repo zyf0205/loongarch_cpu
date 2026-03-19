@@ -6,33 +6,4 @@ Using 2 slave threads.
 Starting static elaboration
 Pass Through NonSizing Optimizer
 Completed static elaboration
-Starting simulation data flow analysis
-WARNING: [XSIM 43-4099] "D:/_study/projects/vivado_projects/loongarch_cpu/loongarch_cpu.srcs/sources_1/new/mycpu_top.v" Line 1. Module mycpu_top doesn't have a timescale but at least one module in design has a timescale.
-WARNING: [XSIM 43-4099] "D:/_study/projects/vivado_projects/loongarch_cpu/loongarch_cpu.srcs/sources_1/new/pc_reg.v" Line 1. Module pc_reg doesn't have a timescale but at least one module in design has a timescale.
-WARNING: [XSIM 43-4099] "D:/_study/projects/vivado_projects/loongarch_cpu/loongarch_cpu.srcs/sources_1/new/decoder.v" Line 1. Module decoder doesn't have a timescale but at least one module in design has a timescale.
-WARNING: [XSIM 43-4099] "D:/_study/projects/vivado_projects/loongarch_cpu/loongarch_cpu.srcs/sources_1/new/controller.v" Line 1. Module controller doesn't have a timescale but at least one module in design has a timescale.
-WARNING: [XSIM 43-4099] "D:/_study/projects/vivado_projects/loongarch_cpu/loongarch_cpu.srcs/sources_1/new/regfile.v" Line 1. Module regfile doesn't have a timescale but at least one module in design has a timescale.
-WARNING: [XSIM 43-4099] "D:/_study/projects/vivado_projects/loongarch_cpu/loongarch_cpu.srcs/sources_1/new/alu.v" Line 1. Module alu doesn't have a timescale but at least one module in design has a timescale.
-WARNING: [XSIM 43-4099] "D:/_study/projects/vivado_projects/loongarch_cpu/loongarch_cpu.srcs/sources_1/new/inst_ram.v" Line 1. Module inst_ram doesn't have a timescale but at least one module in design has a timescale.
-WARNING: [XSIM 43-4099] "D:/_study/projects/vivado_projects/loongarch_cpu/loongarch_cpu.srcs/sources_1/new/data_ram.v" Line 1. Module data_ram doesn't have a timescale but at least one module in design has a timescale.
-WARNING: [XSIM 43-4099] "D:/_study/projects/vivado_projects/loongarch_cpu/loongarch_cpu.srcs/sources_1/new/mycpu_top.v" Line 1. Module mycpu_top doesn't have a timescale but at least one module in design has a timescale.
-WARNING: [XSIM 43-4099] "D:/_study/projects/vivado_projects/loongarch_cpu/loongarch_cpu.srcs/sources_1/new/pc_reg.v" Line 1. Module pc_reg doesn't have a timescale but at least one module in design has a timescale.
-WARNING: [XSIM 43-4099] "D:/_study/projects/vivado_projects/loongarch_cpu/loongarch_cpu.srcs/sources_1/new/decoder.v" Line 1. Module decoder doesn't have a timescale but at least one module in design has a timescale.
-WARNING: [XSIM 43-4099] "D:/_study/projects/vivado_projects/loongarch_cpu/loongarch_cpu.srcs/sources_1/new/controller.v" Line 1. Module controller doesn't have a timescale but at least one module in design has a timescale.
-WARNING: [XSIM 43-4099] "D:/_study/projects/vivado_projects/loongarch_cpu/loongarch_cpu.srcs/sources_1/new/regfile.v" Line 1. Module regfile doesn't have a timescale but at least one module in design has a timescale.
-WARNING: [XSIM 43-4099] "D:/_study/projects/vivado_projects/loongarch_cpu/loongarch_cpu.srcs/sources_1/new/alu.v" Line 1. Module alu doesn't have a timescale but at least one module in design has a timescale.
-WARNING: [XSIM 43-4099] "D:/_study/projects/vivado_projects/loongarch_cpu/loongarch_cpu.srcs/sources_1/new/inst_ram.v" Line 1. Module inst_ram doesn't have a timescale but at least one module in design has a timescale.
-WARNING: [XSIM 43-4099] "D:/_study/projects/vivado_projects/loongarch_cpu/loongarch_cpu.srcs/sources_1/new/data_ram.v" Line 1. Module data_ram doesn't have a timescale but at least one module in design has a timescale.
-Completed simulation data flow analysis
-Time Resolution for simulation is 1ps
-Compiling module xil_defaultlib.pc_reg
-Compiling module xil_defaultlib.decoder
-Compiling module xil_defaultlib.controller
-Compiling module xil_defaultlib.regfile
-Compiling module xil_defaultlib.alu
-Compiling module xil_defaultlib.mycpu_top
-Compiling module xil_defaultlib.inst_ram
-Compiling module xil_defaultlib.data_ram
-Compiling module xil_defaultlib.tb_mycpu
-Compiling module xil_defaultlib.glbl
-Built simulation snapshot tb_mycpu_behav
+INFO: [XSIM 43-4323] No Change in HDL. Linking previously generated obj files to create kernel
